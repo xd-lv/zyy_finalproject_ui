@@ -12,7 +12,7 @@
         请求次数阈值：<el-input type="number" v-model="reqThreshold" style="width: 150px"></el-input>
       </el-col>
       <el-col span=14 style="text-align: right">
-        <el-button type="primary" size="medium" >保存</el-button>
+        <el-button type="primary" size="medium" @click="changThreshold">保存</el-button>
       </el-col>
     </el-row>
     <el-divider></el-divider>
@@ -57,20 +57,20 @@
             </el-table-column>
             <el-table-column label="主体属性状态" width="200" align="center">
               <template slot-scope="scope">
-                <el-tag type="success" v-show="scope.row.subject">{{ scope.row.subject }}</el-tag>
-                <el-tag type="danger" v-show="!scope.row.subject">{{ scope.row.subject }}</el-tag>
+                <el-tag type="success" v-show="scope.row.subject">已完成</el-tag>
+                <el-tag type="danger" v-show="!scope.row.subject">未完成</el-tag>
               </template>
             </el-table-column>
             <el-table-column label="环境属性状态" width="200" align="center">
               <template slot-scope="scope">
-                <el-tag v-show="scope.row.environment" type="success">{{ scope.row.environment }}</el-tag>
-                <el-tag v-show="!scope.row.environment" type="danger">{{ scope.row.environment }}</el-tag>
+                <el-tag v-show="scope.row.environment" type="success">已完成</el-tag>
+                <el-tag v-show="!scope.row.environment" type="danger">未完成</el-tag>
               </template>
             </el-table-column>
             <el-table-column  label="客体属性状态" width="200" align="center">
               <template slot-scope="scope">
-                <el-tag type="success" v-show="scope.row.object">{{ scope.row.object }}</el-tag>
-                <el-tag type="danger" v-show="!scope.row.object">{{ scope.row.object }}</el-tag>
+                <el-tag type="success" v-show="scope.row.object">已完成</el-tag>
+                <el-tag type="danger" v-show="!scope.row.object">未完成</el-tag>
               </template>
             </el-table-column>
             <el-table-column align="center" prop="created_at" label="创建时间" width="200">
@@ -81,7 +81,6 @@
             </el-table-column>
             <el-table-column align="center" prop="created_at" label="操作" width="200">
               <template slot-scope="scope">
-
                 <el-button @click="drawer = true" type="primary" size="small" round>
                   编辑属性
                 </el-button>
@@ -154,6 +153,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
 
   data() {
@@ -238,7 +239,18 @@ export default {
     }
   },
 
+  mounted() {
+    axios.get('http://localhost:8100/config/get').then(res => {
+      this.reqThreshold = res.data.data.reqThreshold
+      this.creditThreshold = res.data.data.creditThreshold
+    })
+  },
+
   methods: {
+    changThreshold() {
+      axios.get('http://localhost:8100/config/update?reqThreshold=' + this.reqThreshold + '&creditThreshold=' + this.creditThreshold)
+      alert('保存成功')
+    },
     filterNode(value, data) {
       if (!value) return true
       return data.label.indexOf(value) !== -1

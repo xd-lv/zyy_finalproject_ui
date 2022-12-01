@@ -1,12 +1,12 @@
 <template>
   <div class="app-container" style="background-color: #f3f3f3; height: 100%">
     <el-row>
-      <el-col span="3"><h2>日志监控面板</h2></el-col>
+      <el-col :span=3><h2>日志监控面板</h2></el-col>
     </el-row>
     <el-row>
       <el-col :span=6>
         日志级别筛选：
-        <el-select v-model="level" placeholder="请选择">
+        <el-select v-model="level" placeholder="请选择" @change="levelFilter">
           <el-option
             v-for="item in levelOption"
             :key="item.value"
@@ -17,14 +17,14 @@
       <el-col :span=6>
         <span class="demonstration">日志日期筛选：</span>
         <el-date-picker
-        v-model="value1"
+        v-model="date"
         type="date"
         placeholder="选择日期">
       </el-date-picker>
       </el-col>
 
-      <el-col span=12 style="text-align: right">
-        <el-button span="3" type="primary">日志下载</el-button>
+      <el-col :span=12 style="text-align: right">
+        <el-button :span=3 type="primary">日志下载</el-button>
       </el-col>
     </el-row>
     <el-row style="background-color: #f3f3f3">
@@ -43,6 +43,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -59,82 +61,11 @@ export default {
       logText: '   7:7   warning  Require self-closing on Vue.js custom components (<el-input>)           vue/html-self-closing\n',
       level: '',
       date: '',
-      logItem: [
-        {
-          'date': '2022-12-1',
-          'level': 'info',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'info',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'warning',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'info',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'info',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'warning',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'info',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'info',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'warning',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'info',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'info',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'warning',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'info',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'info',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'warning',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'info',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'info',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }, {
-          'date': '2022-12-1',
-          'level': 'warning',
-          'content': '设备A请求服务A，信誉值计算：90，信誉阈值：80，放行'
-        }
-      ]
+      logItem: []
     }
+  },
+  mounted() {
+    this.getLog()
   },
   methods: {
     onSubmit() {
@@ -145,6 +76,43 @@ export default {
         message: 'cancel!',
         type: 'warning'
       })
+    },
+    getLog() {
+      var result = axios.get('http://localhost:8100/log/getAllLog').then(res => {
+        console.log(res.data)
+        this.logItem = res.data.data
+      })
+    },
+    levelFilter() {
+      console.log(this.level)
+      switch (this.level) {
+        case 'info':
+          this.logItem = new Array()
+          axios.get('http://localhost:8100/log/getAllLog').then(res => {
+            for (var i = 0; i < res.data.data.length; i++) {
+              if (res.data.data[i].level == 'info') {
+                this.logItem.push(res.data.data[i])
+              }
+            }
+          })
+          break
+        case 'warning':
+          this.logItem = new Array()
+          axios.get('http://localhost:8100/log/getAllLog').then(res => {
+            for (var i = 0; i < res.data.data.length; i++) {
+              if (res.data.data[i].level == 'warning') {
+                this.logItem.push(res.data.data[i])
+              }
+            }
+          })
+          break
+        case 'all':
+          this.logItem = new Array()
+          axios.get('http://localhost:8100/log/getAllLog').then(res => {
+            this.logItem = res.data.data
+          })
+          break
+      }
     }
   }
 }
