@@ -1,5 +1,6 @@
 <template>
-  <div class="app-container" style="background-color: #f3f3f3; height: 100%">
+  <div class="app-container" style="background-color: #f3f3f3;">
+    <div style="background-color: #f3f3f3; height: 750px">
     <el-row>
       <el-col :span=3><h2>日志监控面板</h2></el-col>
     </el-row>
@@ -27,10 +28,10 @@
         <el-button :span=3 type="primary">日志下载</el-button>
       </el-col>
     </el-row>
-    <el-row style="background-color: #f3f3f3">
-      <div style="height: 600px; margin-top: 20px; margin-right: 20px; margin-left: 20px; overflow-y: auto; position: absolute; width: 100%; border: black; border-bottom-width: 2px">
+    <el-row>
+      <div style="height: 600px; margin-top: 20px; margin-right: 20px; margin-left: 20px; overflow-y: auto; position: absolute; width: 1480px; background-color: white; border-width: 2px; border-color: black">
         <div v-for="log in logItem" style="margin-left: 10px">
-          <div style="display: flex; text-align: left">
+          <div style="display: flex; text-align: left; height: 25px">
             <p>{{log.date}}</p>
             <p v-show="log.level==='info'" style="color: green; margin-left: 10px">{{log.level}}</p>
             <p v-show="log.level==='warning'" style="color: red; margin-left: 10px">{{log.level}}</p>
@@ -40,10 +41,11 @@
       </div>
     </el-row>
   </div>
+  </div>
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios'
 
 export default {
   data() {
@@ -65,7 +67,9 @@ export default {
     }
   },
   mounted() {
-    this.getLog()
+    setInterval(() => {
+      this.getLog()
+    }, 1000 * 5)
   },
   methods: {
     onSubmit() {
