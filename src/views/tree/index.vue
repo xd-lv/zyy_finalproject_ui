@@ -1,6 +1,6 @@
 <template>
   <div class="app-container"  style="background-color: #f3f3f3; height: 900px">
-    <el-row>
+    <el-row style="margin-bottom: 20px">
       <el-col :span=3><h2>零信任认证管理</h2></el-col>
     </el-row>
 
@@ -52,7 +52,7 @@
             </el-table-column>
             <el-table-column label="名称">
               <template slot-scope="scope">
-                {{ scope.row.title }}
+                {{ scope.row.name }}
               </template>
             </el-table-column>
             <el-table-column label="主体属性状态" width="200" align="center">
@@ -76,7 +76,7 @@
             <el-table-column align="center" prop="created_at" label="创建时间" width="200">
               <template slot-scope="scope">
                 <i class="el-icon-time" />
-                <span>{{ scope.row.display_time }}</span>
+                <span>{{ scope.row.createTime }}</span>
               </template>
             </el-table-column>
             <el-table-column align="center" prop="created_at" label="操作" width="200">
@@ -95,8 +95,8 @@
         :visible.sync="drawer"
         :direction="direction"
         :before-close="handleClose">
-        <div class="overflowAuto" style="margin-left: 20px; margin-bottom: 100px;">
-          <el-form ref="form" :model="form" label-width="150px">
+        <div class="overflowAuto" style="margin-left: 20px; margin-bottom: 100px; width: 500px">
+          <el-form ref="form" :model="form" label-width="150px" style="margin-right: 20px; ">
             <h2>主体属性</h2>
             <el-form-item label="MAC地址">
               <el-input v-model="form.name" />
@@ -222,13 +222,29 @@ export default {
       },
       list: [
         {
+          name: '节点1',
           subject: true,
           environment: true,
-          object: true
+          object: true,
+          createTime: '2022/12/1'
         }, {
+          name: '节点2',
           subject: false,
           environment: false,
-          object: false
+          object: false,
+          createTime: '2022/12/1'
+        }, {
+          name: '节点3',
+          subject: true,
+          environment: false,
+          object: true,
+          createTime: '2022/12/1'
+        }, {
+          name: '节点4',
+          subject: true,
+          environment: true,
+          object: true,
+          createTime: '2022/12/1'
         }
       ]
     }
