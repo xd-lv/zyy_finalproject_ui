@@ -6,6 +6,9 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
+import axios from './router/axios'
+import VueAxios from 'vue-axios'
+
 import '@/styles/index.scss' // global css
 
 import App from './App'
@@ -14,6 +17,9 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+
+window.axios = axios
+Vue.use(VueAxios, axios)
 
 /**
  * If you don't want to use mock-server

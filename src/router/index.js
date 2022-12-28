@@ -55,7 +55,6 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
-
   {
     path: '/cluster',
     component: Layout,
@@ -71,7 +70,18 @@ export const constantRoutes = [
       }
     ]
   },
-
+  {
+    path: '/data',
+    component: Layout,
+    children: [
+      {
+        path: 'data',
+        name: 'Data',
+        component: () => import('@/views/data/index'),
+        meta: { title: '资源管理系统', icon: 'tree' }
+      }
+    ]
+  },
   {
     path: '/auth',
     component: Layout,
@@ -83,7 +93,8 @@ export const constantRoutes = [
         meta: { title: '零信任认证管理', icon: 'tree' }
       }
     ]
-  }, {
+  },
+  {
     path: '/log',
     component: Layout,
     children: [

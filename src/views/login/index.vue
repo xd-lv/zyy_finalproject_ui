@@ -106,6 +106,10 @@ export default {
       })
     },
     handleLogin() {
+      // console.log(this.$route)
+      // this.$router.push({ path: this.redirect || '/' })
+      // console.log(this.$route)
+
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
