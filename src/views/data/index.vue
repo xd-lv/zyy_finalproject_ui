@@ -1,6 +1,6 @@
 <template>
   <div class="execution">
-    <basic-container>
+    <!-- <basic-container> -->
       <div class="data-manage">
         <a-page-header ref="data-manage-page-header" />
         <div :style="{ height: divHeight }">
@@ -195,19 +195,21 @@
           <el-button type="primary" @click="createFolder">创建</el-button>
         </span>
       </el-dialog>
-    </basic-container>
+    <!-- </basic-container> -->
   </div>
 </template>
 
 <script>
 import { createObjFolder, delFolder, delSelectedFolder } from '@/api/dataset'
-import Vue from 'vue'
-import uploader from 'vue-simple-uploader'
-import store from '@/store'
-// import Antd from 'ant-design-vue'
-// import 'ant-design-vue/dist/antd.css'
+import { Vue } from 'vue'
+import { uploader } from 'vue-simple-uploader'
+import { store } from '@/store'
+import { axios } from 'axios'
+import { Antd } from 'ant-design-vue'
+import 'ant-design-vue/dist/antd.css'
 
 Vue.use(uploader)
+Vue.use(Antd)
 
 const text = 'Are you sure to delete this task?'
 
@@ -366,15 +368,16 @@ export default {
       this.breadcrumbOnClick(this.routes.length)
     },
     getPath(fileparam) {
-      this.axios
-        .get('/data/bucket/getObjects', {
+      axios
+        .get('http://localhost:8100/data/bucket/getObjects', {
           params: {
             prefix: fileparam,
-            recursive: false
-          },
-          headers: {
-            nprogressDisable: true
+            recursive: false,
+            userId: 1023414272
           }
+          // headers: {
+          //   nprogressDisable: true
+          // }
         })
         .then((res) => {
           if (res.data.code === 0) {

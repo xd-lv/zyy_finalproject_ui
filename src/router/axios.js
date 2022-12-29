@@ -1,12 +1,12 @@
-import axios from 'axios'
+import { axios } from 'axios'
 import { serialize } from '@/utils/util'
-import NProgress from 'nprogress' // progress bar
-import errorCode from '@/const/errorCode'
-import router from '@/router/index'
+import { NProgress } from 'nprogress' // progress bar
+import { errorCode } from '@/const/errorCode'
+import { router } from '@/router/index'
 import { Message } from 'element-ui'
 import 'nprogress/nprogress.css'
-import qs from 'qs'
-import store from '@/store' // progress bar style
+import { qs } from 'qs'
+import { store } from '@/store' // progress bar style
 axios.defaults.timeout = 30000
 // 返回其他状态吗
 axios.defaults.validateStatus = function(status) {

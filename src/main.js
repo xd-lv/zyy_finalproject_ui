@@ -1,19 +1,19 @@
-import Vue from 'vue'
+import { Vue } from 'vue'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
-import ElementUI from 'element-ui'
+import { ElementUI } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+import { locale } from 'element-ui/lib/locale/lang/en' // lang i18n
 
-import axios from './router/axios'
-import VueAxios from 'vue-axios'
+import { axios } from './router/axios'
+import { VueAxios } from 'vue-axios'
 
 import '@/styles/index.scss' // global css
 
-import App from './App'
-import store from './store'
-import router from './router'
+import { App } from './App'
+import { store } from './store'
+import { router } from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control

@@ -819,7 +819,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { axios } from "axios";
 import { listProduct, listDevice } from "@/api/product";
 import { getClusterList } from "@/api/table";
 import { tsImportEqualsDeclaration } from "@babel/types";
@@ -963,15 +963,15 @@ export default {
     /** 查询设备列表 */
     getList() {
       this.loading = true;
-      axios.get("http://localhost:8000/test1/cluster/listDevice").then((res) => {
+      axios.get("http://localhost:8100/cluster/listDevice").then((res) => {
         this.deviceList = res.data.data;
         this.loading = false;
       });
-      axios.get("http://localhost:8000/test1/cluster/listNode").then((res) => {
+      axios.get("http://localhost:8100/cluster/listNode").then((res) => {
         this.nodeList = res.data.data;
         this.loading = false;
       });
-      axios.get("http://localhost:8000/test1/cluster/listEdge").then((res) => {
+      axios.get("http://localhost:8100/cluster/listEdge").then((res) => {
         this.edgeList = res.data.data;
         this.loading = false;
         console.log(this.nodeOptions);
@@ -1015,18 +1015,18 @@ export default {
       console.log("click");
     },
     createEdgeAction() {
-      console.log(this.edgeForm);
+      console.log(this.edgeForm)
       var object = {
         name: this.edgeForm.edgeName,
-        desc: this.edgeForm.edgeDesc,
+        desc: this.edgeForm.edgeDesc
       };
-      this.edgeListRefresh = false;
+      this.edgeListRefresh = false
       axios
-        .post("http://localhost:8000/test1/cluster/createEdge", object)
+        .post('http://localhost:8100/cluster/createEdge', object)
         .then((res) => {
-          this.getList();
-          this.edgeCreate = false;
-          this.edgeListRefresh = true;
+          this.getList()
+          this.edgeCreate = false
+          this.edgeListRefresh = true
         });
     },
   },
