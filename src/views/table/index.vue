@@ -819,7 +819,7 @@
 </template>
 
 <script>
-import { axios } from "axios";
+import axios from "axios";
 import { listProduct, listDevice } from "@/api/product";
 import { getClusterList } from "@/api/table";
 import { tsImportEqualsDeclaration } from "@babel/types";

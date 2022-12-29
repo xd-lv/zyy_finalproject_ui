@@ -148,16 +148,16 @@ export const listenfullscreen = (callback) => {
   function listen() {
     callback()
   }
-  document.addEventListener("fullscreenchange", function () {
+  document.addEventListener('fullscreenchange', function () {
     listen();
   });
-  document.addEventListener("mozfullscreenchange", function () {
+  document.addEventListener('mozfullscreenchange', function () {
     listen();
   });
-  document.addEventListener("webkitfullscreenchange", function () {
+  document.addEventListener('webkitfullscreenchange', function () {
     listen();
   });
-  document.addEventListener("msfullscreenchange", function () {
+  document.addEventListener('msfullscreenchange', function () {
     listen();
   });
 };
@@ -173,11 +173,11 @@ export const fullscreenEnable = () => {
  */
 export const reqFullScreen = () => {
   if (document.documentElement.requestFullScreen) {
-    document.documentElement.requestFullScreen();
+    document.documentElement.requestFullScreen()
   } else if (document.documentElement.webkitRequestFullScreen) {
-    document.documentElement.webkitRequestFullScreen();
+    document.documentElement.webkitRequestFullScreen()
   } else if (document.documentElement.mozRequestFullScreen) {
-    document.documentElement.mozRequestFullScreen();
+    document.documentElement.mozRequestFullScreen()
   }
 };
 /**
@@ -185,11 +185,11 @@ export const reqFullScreen = () => {
  */
 export const exitFullScreen = () => {
   if (document.documentElement.requestFullScreen) {
-    document.exitFullScreen();
+    document.exitFullScreen()
   } else if (document.documentElement.webkitRequestFullScreen) {
-    document.webkitCancelFullScreen();
+    document.webkitCancelFullScreen()
   } else if (document.documentElement.mozRequestFullScreen) {
-    document.mozCancelFullScreen();
+    document.mozCancelFullScreen()
   }
 };
 /**
@@ -198,12 +198,12 @@ export const exitFullScreen = () => {
 
 export const findParent = (menu, id) => {
   for (let i = 0; i < menu.length; i++) {
-    if (menu[i].children.length != 0) {
+    if (menu[i].children.length !== 0) {
       for (let j = 0; j < menu[i].children.length; j++) {
-        if (menu[i].children[j].id == id) {
+        if (menu[i].children[j].id === id) {
           return menu[i]
         } else {
-          if (menu[i].children[j].children.length != 0) {
+          if (menu[i].children[j].children.length !== 0) {
             return findParent(menu[i].children[j].children, id)
           }
         }
