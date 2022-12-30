@@ -5,10 +5,14 @@
       <a-page-header ref="data-manage-page-header" />
       <div :style="{ height: divHeight }">
         <div style="margin: 10px 80px">
-          <a-card style="width: 100%; color: #0046b9; background: #d5e7ff" :bordered="false" size="small"
+          <a-card
+            style="width: 100%; color: #0046b9; background: #d5e7ff"
+            :bordered="false"
+            size="small"
             :hoverable="true">
             <p style="display: flex">
-              <a-icon style="margin-right: 10px; fontsize: 18px"
+              <a-icon
+                style="margin-right: 10px; fontsize: 18px"
                 type="exclamation-circle" />此免费存储空间存储上限为500GB，超过15天未登陆，免费存储空间数据将被清空。
             </p>
           </a-card>
@@ -20,7 +24,7 @@
           <a-button style="margin-right: 12px" size="small" @click="createFolderShow = true">
             创建文件夹
           </a-button>
-          <a-popconfirm placement="bottom" :title="text" @confirm="delSelected" okText="Yes" cancelText="No">
+          <a-popconfirm placement="bottom" :title="text" ok-text="Yes" cancel-text="No" @confirm="delSelected">
             <a-button type="danger" size="small"> 批量删除 </a-button>
           </a-popconfirm>
         </div>
@@ -28,7 +32,7 @@
         <div style="margin: 20px 80px 10px 89px">
           <a-breadcrumb style="margin: 5px; min-height: 33px" separator=">">
             <a-breadcrumb-item v-for="(item, index) in routes" :key="index">
-              <a-button type="link" @click="breadcrumbOnClick(index)" value="small" v-if="index == 0" icon="home" />
+              <a-button v-if="index == 0" type="link" value="small" @click="breadcrumbOnClick(index)" icon="home" />
               <a-button style="padding: unset" type="link" @click="breadcrumbOnClick(index)" value="small" v-else>{{
                   item.name
               }}</a-button>
@@ -37,10 +41,11 @@
         </div>
         <!-- 文件属性显示列表 -->
         <div style="margin: 0px 80px">
-          <a-table :row-selection="{
-            selectedRowKeys: selectedRowKeys,
-            onChange: onSelectChange,
-          }" :columns="tableColumns" :data-source="tableData" :loading="isLoading">
+          <a-table
+            :row-selection="{
+              selectedRowKeys: selectedRowKeys,
+              onChange: onSelectChange,
+            }" :columns="tableColumns" :data-source="tableData" :loading="isLoading">
             <span slot="name" slot-scope="text, tableData">
               <span v-if="tableData.isDir"><a-icon style="margin-right: 5px" type="folder" /><a class="folder-link"
                   @click="onClickDir(tableData)">{{ text }}</a></span>
@@ -120,10 +125,11 @@
 </template>
 
 <script>
-import { createObjFolder, delFolder, delSelectedFolder } from '@/api/dataset'
+// import { createObjFolder, delFolder, delSelectedFolder } from '@/api/dataset'
+import { delFolder, delSelectedFolder } from '@/api/dataset'
 import Vue from 'vue'
 import uploader from 'vue-simple-uploader'
-import store from '@/store'
+// import store from '@/store'
 import axios from 'axios'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
@@ -131,7 +137,7 @@ import 'ant-design-vue/dist/antd.css'
 Vue.use(uploader)
 Vue.use(Antd)
 
-const text = 'Are you sure to delete this task?'
+// const text = 'Are you sure to delete this task?'
 
 const tableColumns = [
   {

@@ -56,56 +56,100 @@ export const constantRoutes = [
     }]
   },
   {
-    path: '/cluster',
+    path: '/resource',
     component: Layout,
-    redirect: '/example/table',
-    name: '边云集群管理',
-    meta: { title: '边云集群管理', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: '边云集群管理', icon: 'table' }
-      }
-    ]
-  },
-  {
-    path: '/data',
-    component: Layout,
+    meta: { title: '模型资源管理' },
     children: [
       {
         path: 'data',
         name: 'Data',
-        component: () => import('@/views/data/index'),
-        meta: { title: '资源管理系统', icon: 'tree' }
+        component: () => import('@/views/resource/data/index'),
+        meta: { title: '文件管理', icon: 'data' }
+      },
+      {
+        path: 'dataset',
+        name: 'Dataset',
+        component: () => import('@/views/resource/dataset/index'),
+        meta: { title: '数据集管理', icon: 'dataset' }
+      },
+      {
+        path: 'model',
+        name: 'Model',
+        component: () => import('@/views/resource/model/index'),
+        meta: { title: '模型管理', icon: 'model' }
       }
     ]
   },
   {
-    path: '/auth',
+    path: '/service',
     component: Layout,
+    name: '服务管理',
+    meta: { title: '服务管理' },
     children: [
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '零信任认证管理', icon: 'tree' }
+        path: 'construct',
+        name: 'Construct',
+        component: () => import('@/views/service/construct/index'),
+        meta: { title: '服务构建', icon: 'construct' }
+      },
+      {
+        path: 'version',
+        name: 'Version',
+        component: () => import('@/views/service/version/index'),
+        meta: { title: '服务版本管理', icon: 'version' }
+      },
+      {
+        path: 'update',
+        name: 'Update',
+        component: () => import('@/views/service/update/index'),
+        meta: { title: '服务更新', icon: 'update' }
       }
     ]
   },
   {
-    path: '/log',
+    path: '/cluster',
     component: Layout,
+    name: '集群管理',
+    meta: { title: '集群管理' },
     children: [
       {
-        path: 'index',
-        name: '日志监控',
-        component: () => import('@/views/form/index'),
-        meta: { title: '日志监控', icon: 'form' }
+        path: 'node',
+        name: 'Node',
+        component: () => import('@/views/cluster/node/index'),
+        meta: { title: '节点管理', icon: 'node' }
+      },
+      {
+        path: 'monitor',
+        name: 'Monitor',
+        component: () => import('@/views/cluster/monitor/index'),
+        meta: { title: '集群监控', icon: 'monitor' }
       }
     ]
   },
+  // {
+  //   path: '/auth',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'tree',
+  //       name: 'Tree',
+  //       component: () => import('@/views/tree/index'),
+  //       meta: { title: '零信任认证管理', icon: 'tree' }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/log',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: '日志监控',
+  //       component: () => import('@/views/form/index'),
+  //       meta: { title: '日志监控', icon: 'form' }
+  //     }
+  //   ]
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
