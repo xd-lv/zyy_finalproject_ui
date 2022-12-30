@@ -155,7 +155,7 @@ const tableColumns = [
     key: 'action',
     scopedSlots: { customRender: 'action' }
   }
-];
+]
 export default {
   filters: {
     statusFilter(status) {
@@ -184,34 +184,36 @@ export default {
       text: '确定批量删除选择项吗？',
       isLoading: false,
       fileoptions: {
-        target: '/data/bucket/upload',
+        target: 'http://localhost:8100' + '/data/bucket/upload',
         testChunks: false,
         chunkSize: 100 * 1024 * 1024 * 1024,
         simultaneousUploads: 5,
         allowDuplicateUploads: true,
         fileParameterName: 'file',
-        headers: {
-          Authorization: 'Bearer ' + store.getters.access_token
-        },
+        // headers: {
+        //   Authorization: 'Bearer ' + store.getters.access_token
+        // },
         query: {
-          ossPath: 'examples'
-        },
+          ossPath: 'examples',
+          userId: '1023414272'
+        }
       },
       fileattrs: {
         accept: 'image/*'
       },
       filefloaderoptions: {
-        target: '/data/bucket/upload',
+        target: 'http://localhost:8100' + '/data/bucket/upload',
         testChunks: false,
         chunkSize: 100 * 1024 * 1024 * 1024,
         simultaneousUploads: 5,
         allowDuplicateUploads: true,
         fileParameterName: 'file',
-        headers: {
-          Authorization: 'Bearer ' + store.getters.access_token
-        },
+        // headers: {
+        //   Authorization: 'Bearer ' + store.getters.access_token
+        // },
         query: {
-          ossPath: ''
+          ossPath: '',
+          userId: '1023414272'
         }
       },
       filefloaderattrs: {
@@ -241,10 +243,28 @@ export default {
       this.getTableData()
     },
     createFolder() {
-      let path = this.filepath + this.FolderName + '/'
-      createObjFolder(path)
-        .then((response) => { })
+      const path = this.filepath + this.FolderName + '/'
+      console.log(path)
+      // axios
+      //   .post('http://localhost:8100/data/bucket/uploadEmptyDir', {
+      //     params: {
+      //       path: path,
+      //       userId: 1023414272
+      //     }
+      //   }).then((response) => { })
+      //   .catch(() => { })
+      axios({
+        url: 'http://localhost:8100/data/bucket/uploadEmptyDir',
+        method: 'POST',
+        params: {
+          path: path,
+          userId: 1023414272
+        }
+      }).then((response) => { })
         .catch(() => { })
+      // createObjFolder(path)
+      //   .then((response) => { })
+      //   .catch(() => { })
       this.isLoading = true
       setTimeout(() => {
         this.loadUpData()
@@ -288,18 +308,26 @@ export default {
       this.breadcrumbOnClick(this.routes.length)
     },
     getPath(fileparam) {
-      console.log(fileparam)
-      axios
-        .get('http://localhost:8100/data/bucket/getObjects', {
-          params: {
-            prefix: fileparam,
-            recursive: false,
-            userId: 1023414272
-          }
-          // headers: {
-          //   nprogressDisable: true
-          // }
-        })
+      // axios
+      //   .get('http://localhost:8100/data/bucket/getObjects', {
+      //     params: {
+      //       prefix: fileparam,
+      //       recursive: false,
+      //       userId: 1023414272
+      //     }
+      //     // headers: {
+      //     //   nprogressDisable: true
+      //     // }
+      //   })
+      axios({
+        url: 'http://localhost:8100/data/bucket/getObjects',
+        method: 'GET',
+        params: {
+          prefix: fileparam,
+          recursive: false,
+          userId: 1023414272
+        }
+      })
         .then((res) => {
           console.log(res)
           if (res.data.code === 200) {
