@@ -18,6 +18,10 @@ import router from './router/index'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+import Avue from '@smallwei/avue'
+import '@smallwei/avue/lib/index.css'
+import AvueFormDesign from '@sscfaith/avue-form-design'
+
 // window.axios = axios
 // Vue.use(VueAxios, axios)
 
@@ -38,6 +42,13 @@ if (process.env.NODE_ENV === 'production') {
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
+
+Vue.use(Avue, {
+  size: 'small',
+  menuType: 'text'
+})
+
+Vue.use(AvueFormDesign)
 
 Vue.config.productionTip = false
 
