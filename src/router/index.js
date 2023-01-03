@@ -56,9 +56,14 @@ export const constantRoutes = [
     }]
   },
   {
+    path: '/title',
+    component: Layout,
+    meta: { title: '边缘智能AI服务管理系统' }
+  },
+  {
     path: '/resource',
     component: Layout,
-    meta: { title: '模型资源管理' },
+    meta: { title: '模型资源管理', icon: 'resourcemanagement' },
     children: [
       {
         path: 'data',
@@ -84,7 +89,7 @@ export const constantRoutes = [
     path: '/service',
     component: Layout,
     name: '服务管理',
-    meta: { title: '服务管理' },
+    meta: { title: '服务管理', icon: 'servicemanagement' },
     children: [
       {
         path: 'construct',
@@ -110,7 +115,7 @@ export const constantRoutes = [
     path: '/cluster',
     component: Layout,
     name: '集群管理',
-    meta: { title: '集群管理' },
+    meta: { title: '集群管理', icon: 'clustermanagement' },
     children: [
       {
         path: 'node',
