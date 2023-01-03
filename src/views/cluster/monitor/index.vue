@@ -1,100 +1,64 @@
 <template>
-  <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="事件活动" name="second">
-      <div class="block">
-        <el-row>
-          <el-card class="box-card card-height" :style="conheight">
-            <ul
-              class="infinite-list"
-              v-infinite-scroll="load"
-              style="overflow: auto"
-            >
-              <li v-for="i in count" class="infinite-list-item">{{ i }}</li>
-            </ul>
-            <el-timeline>
-              <el-timeline-item v-for="(item, index) in evenList" :key="index">
-                <el-card @click.native="getPath">
-                  <h4>{{ item.name }}</h4>
-                  <p>{{ item.timestamp }}</p>
-                </el-card>
-              </el-timeline-item>
-            </el-timeline>
-          </el-card>
-        </el-row>
-      </div>
-    </el-tab-pane>
-    <el-tab-pane label="服务日志" name="third">
-      <div class="execution">
-        <basic-container>
-          <avue-crud
-            ref="crud"
-            :page.sync="page"
-            :data="tableData"
-            :permission="permissionList"
-            :table-loading="tableLoading"
-            :option="tableOption"
-            :before-open="beforeOpen"
-            @on-load="getList"
-            @search-change="searchChange"
-            @refresh-change="refreshChange"
-            @size-change="sizeChange"
-            @current-change="currentChange"
-            @row-update="handleUpdate"
-            @row-save="handleSave"
-            @row-del="rowDel"
-          >
-            <template slot-scope="scope" slot="state">
-              <el-tag type="warning" v-if="scope.row.state == 0">未上线</el-tag>
-              <el-tag type="info" v-if="scope.row.state == 1">上线中</el-tag>
-              <el-tag type="success" v-if="scope.row.state == 2">已上线</el-tag>
-              <el-tag type="info" v-if="scope.row.state == 3">下线中</el-tag>
-            </template>
-            <template slot-scope="scope" slot="menu">
-              <el-button
-                :size="scope.size"
-                :type="scope.type"
-                @click="online(scope.row)"
-                v-if="scope.row.state == 0"
-                >上线
-              </el-button>
-              <el-button
-                :size="scope.size"
-                :type="scope.type"
-                @click="getPredictAPI(scope.row)"
-                v-if="scope.row.state == 2"
-              >
-                获取API
-              </el-button>
-              <el-button
-                :size="scope.size"
-                :type="scope.type"
-                @click="offline(scope.row)"
-                v-if="scope.row.state == 2"
-              >
-                下线</el-button
-              >
-            </template>
-          </avue-crud>
-        </basic-container>
-      </div>
-    </el-tab-pane>
-  </el-tabs>
+  <div class="app-container" style="background-color: #efefef; height: 100%">
+    <el-row>
+      <el-col span="3">
+        <h2>集群监控</h2>
+      </el-col>
+    </el-row>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="事件活动" name="second">
+        <div class="block">
+          <el-row>
+            <el-card class="box-card card-height card" :style="conheight">
+              <el-timeline>
+                <el-timeline-item v-for="(item, index) in evenList" :key="index">
+                  <el-card @click.native="getPath">
+                    <h4>{{ item.name }}</h4>
+                    <p>{{ item.timestamp }}</p>
+                  </el-card>
+                </el-timeline-item>
+              </el-timeline>
+            </el-card>
+          </el-row>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="服务日志" name="third">
+        <div class="execution">
+          <basic-container>
+            <avue-crud ref="crud" :page.sync="page" :data="tableData" :permission="permissionList"
+                       :table-loading="tableLoading" :option="tableOption" :before-open="beforeOpen" @on-load="getList"
+                       @search-change="searchChange" @refresh-change="refreshChange" @size-change="sizeChange"
+                       @current-change="currentChange">
+              <template slot-scope="scope" slot="state">
+                <el-tag type="warning" v-if="scope.row.state == 0">未上线</el-tag>
+                <el-tag type="info" v-if="scope.row.state == 1">上线中</el-tag>
+                <el-tag v-if="scope.row.state == 2" type="success">已上线</el-tag>
+                <el-tag v-if="scope.row.state == 3" type="info">下线中</el-tag>
+              </template>
+            </avue-crud>
+          </basic-container>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
+  </div>
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios'
+import { tableOption, setModelList } from '@/const/crud/modelservice'
 
-axios.defaults.withCredentials = false;
+axios.defaults.withCredentials = false
 
 export default {
   data() {
     return {
-      activeName: "second",
+      activeName: 'second',
       // card高度自适应
       conheight: {
-        height: "",
+        height: ''
       },
       tableData: [],
+      tableOption: tableOption,
       eventQueryParams: {
         pageNum: 1,
         pageSize: 12,
@@ -108,6 +72,8 @@ export default {
         nodeType: null,
         networkMethod: null,
       },
+      timer: null, // 轮询定时器
+      timerNum: 10000, // 设置定时器时间ms
       evenList: [
         {
           name: "活动按期开始",
@@ -141,6 +107,56 @@ export default {
     getHeight() {
       this.conheight.height = window.innerHeight - 170 + "px";
     },
+    beforeOpen(done, type) {
+      if (["add", "edit"].includes(type)) {
+        getModelList()
+          .then((data) => {
+            setModelList(data.data.data);
+            done();
+          })
+          .catch((e) => {
+            console.log(e.message, e.name, e.lineNumber);
+            this.$message.error("获取模型列表失败");
+            done();
+          });
+      }
+    },
+    getList(page, params) {
+      this.tableLoading = true;
+      // fetchList(
+      //   Object.assign(
+      //     {
+      //       current: page.currentPage,
+      //       size: page.pageSize,
+      //     },
+      //     params,
+      //     this.searchForm
+      //   )
+      // )
+      axios({
+        url: 'http://localhost:8100/generalmodelservice/page',
+        method: 'GET',
+        params: Object.assign(
+          {
+            current: page.currentPage,
+            size: page.pageSize
+          },
+          params,
+          this.searchForm,
+          {
+            userId: 1023414272
+          }
+        )
+      })
+        .then((response) => {
+          this.tableData = response.data.data.records;
+          this.page.total = response.data.data.total;
+          this.tableLoading = false;
+        })
+        .catch(() => {
+          this.tableLoading = false;
+        });
+    },
     getStatus() {
       this.timer = setInterval(() => {
         // 创建定时器
@@ -149,17 +165,17 @@ export default {
           url: "http://localhost:8100/generalmodelservice/allStatus",
           method: "GET",
           params: {
-            userId: 1023414272,
-          },
+            userId: 1023414272
+          }
         })
           .then((data) => {
-            var newStatus = data.data.data;
+            var newStatus = data.data.data
             this.tableData.forEach((value) => {
               if (newStatus[value.modelServiceId]) {
                 value.state =
                   newStatus[value.modelServiceId].modelServiceStatus;
               }
-            });
+            })
           })
           .catch(() => {
             this.$message.error("模型服务状态无法获取");
@@ -238,4 +254,8 @@ element.style {
 .el-card-define >>> .el-card__body {
   height: 100%;
 }
+
+.card{
+  overflow-y:auto  /* 开启滚动显示溢出内容 */
+ }
 </style>
