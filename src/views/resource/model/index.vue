@@ -39,6 +39,11 @@
           @click="showRow(row)"
         >显示</el-button>
       </template>
+      <el-pagination
+  background
+  layout="prev, pager, next"
+  :total="1000">
+</el-pagination>
       </avue-crud>
     </basic-container>
 
