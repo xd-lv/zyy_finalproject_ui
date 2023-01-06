@@ -2,18 +2,21 @@
   <div class="execution">
     <!-- <basic-container> -->
     <div class="data-manage">
-      <a-page-header ref="data-manage-page-header" />
+      <a-page-header ref="data-manage-page-header"/>
       <div :style="{ height: divHeight }">
         <div style="margin: 10px 80px">
           <a-card
             style="width: 100%; color: #0046b9; background: #d5e7ff"
             :bordered="false"
             size="small"
-            :hoverable="true">
+            :hoverable="true"
+          >
             <p style="display: flex">
               <a-icon
                 style="margin-right: 10px; fontsize: 18px"
-                type="exclamation-circle" />此免费存储空间存储上限为500GB，超过15天未登陆，免费存储空间数据将被清空。
+                type="exclamation-circle"
+              />
+              此免费存储空间存储上限为500GB，超过15天未登陆，免费存储空间数据将被清空。
             </p>
           </a-card>
         </div>
@@ -25,17 +28,18 @@
             创建文件夹
           </a-button>
           <a-popconfirm placement="bottom" :title="text" ok-text="Yes" cancel-text="No" @confirm="delSelected">
-            <a-button type="danger" size="small"> 批量删除 </a-button>
+            <a-button type="danger" size="small"> 批量删除</a-button>
           </a-popconfirm>
         </div>
         <!-- 文件路径显示 -->
         <div style="margin: 20px 80px 10px 89px">
           <a-breadcrumb style="margin: 5px; min-height: 33px" separator=">">
             <a-breadcrumb-item v-for="(item, index) in routes" :key="index">
-              <a-button v-if="index == 0" type="link" value="small" @click="breadcrumbOnClick(index)" icon="home" />
+              <a-button v-if="index == 0" type="link" value="small" @click="breadcrumbOnClick(index)" icon="home"/>
               <a-button style="padding: unset" type="link" @click="breadcrumbOnClick(index)" value="small" v-else>{{
                   item.name
-              }}</a-button>
+                }}
+              </a-button>
             </a-breadcrumb-item>
           </a-breadcrumb>
         </div>
@@ -45,23 +49,25 @@
             :row-selection="{
               selectedRowKeys: selectedRowKeys,
               onChange: onSelectChange,
-            }" :columns="tableColumns" :data-source="tableData" :loading="isLoading">
+            }" :columns="tableColumns" :data-source="tableData" :loading="isLoading"
+          >
             <span slot="name" slot-scope="text, tableData">
-              <span v-if="tableData.isDir"><a-icon style="margin-right: 5px" type="folder" /><a class="folder-link"
-                  @click="onClickDir(tableData)">{{ text }}</a></span>
-              <span v-else><a-icon style="margin-right: 5px" type="file" />{{
+              <span v-if="tableData.isDir"><a-icon style="margin-right: 5px" type="folder"/><a class="folder-link"
+                                                                                               @click="onClickDir(tableData)"
+              >{{ text }}</a></span>
+              <span v-else><a-icon style="margin-right: 5px" type="file"/>{{
                   text
-              }}</span>
+                }}</span>
             </span>
-            <span slot="customTitle"><a-icon type="align-left" /> 文件名</span>
+            <span slot="customTitle"><a-icon type="align-left"/> 文件名</span>
             <span slot="action" slot-scope="text, tableData">
               <a-popconfirm title="确定删除文件吗?" @confirm="() => onDelete(tableData)">
                 <a>删除</a>
               </a-popconfirm>
-              <a-divider type="vertical" />
+              <a-divider type="vertical"/>
               <a>复制路径</a>
               <span v-if="!tableData.isDir">
-                <a-divider type="vertical" />
+                <a-divider type="vertical"/>
                 <a :href="tableData.url">下载</a>
               </span>
             </span>
@@ -69,13 +75,18 @@
         </div>
       </div>
     </div>
-    <el-dialog title="上传文件" :visible.sync="upFileShow" class="avue-dialog" v-dialogdrag width="35%" @close="reloadFile"
-      :close-on-click-modal="false">
+    <el-dialog title="上传文件" :visible.sync="upFileShow" class="avue-dialog" v-dialogdrag width="35%"
+               @close="reloadFile"
+               :close-on-click-modal="false"
+    >
       <el-row :span="24">
         <a-card style="width: 100%; color: #1890ff; background: #ffffff" :bordered="false" size="small"
-          :hoverable="true">
+                :hoverable="true"
+        >
           <p style="display: flex">
-            <a-icon style="margin-right: 10px; fontsize: 24px" type="exclamation-circle" />即将上传到：{{ "/" + this.filepath
+            <a-icon style="margin-right: 10px; fontsize: 24px" type="exclamation-circle"/>
+            即将上传到：{{
+              '/' + this.filepath
             }}
           </p>
         </a-card>
@@ -102,9 +113,12 @@
     <el-dialog title="创建文件夹" :visible.sync="createFolderShow" class="avue-dialog" v-dialogdrag width="35%">
       <el-row :span="24">
         <a-card style="width: 100%; color: #1890ff; background: #ffffff" :bordered="false" size="small"
-          :hoverable="true">
+                :hoverable="true"
+        >
           <p style="display: flex">
-            <a-icon style="margin-right: 10px; fontsize: 24px" type="exclamation-circle" />文件夹位置：{{ "/" + this.filepath
+            <a-icon style="margin-right: 10px; fontsize: 24px" type="exclamation-circle"/>
+            文件夹位置：{{
+              '/' + this.filepath
             }}
           </p>
         </a-card>
@@ -266,8 +280,10 @@ export default {
           path: path,
           userId: 1023414272
         }
-      }).then((response) => { })
-        .catch(() => { })
+      }).then((response) => {
+      })
+        .catch(() => {
+        })
       // createObjFolder(path)
       //   .then((response) => { })
       //   .catch(() => { })
@@ -350,10 +366,10 @@ export default {
             message: '获取目录失败',
             description: '获取目录失败'
           })
-        });
+        })
     },
     onDelete(tableData) {
-      delFolder(this.filepath, this.filepath + tableData.name);
+      delFolder(this.filepath, this.filepath + tableData.name)
       this.isLoading = true
       setTimeout(() => {
         this.loadUpData()
@@ -369,7 +385,7 @@ export default {
       }, 1000)
     },
     delSelected() {
-      let filenameArray = new Array();
+      let filenameArray = new Array()
       for (var i = 0; i < this.selectedRows.length; i++) {
         filenameArray.push(this.selectedRows[i].name)
       }
@@ -378,7 +394,7 @@ export default {
           prefix: this.filepath,
           filename: filenameArray
         })
-      );
+      )
       setTimeout(() => {
         this.loadUpData()
         this.isLoading = false
@@ -443,15 +459,15 @@ element.style {
   overflow-y: auto;
 }
 
-.data-manage>>>.ant-page-header-heading-title {
+.data-manage >>> .ant-page-header-heading-title {
   font-size: 18px;
 }
 
-.data-manage>>>.ant-card-body>p {
+.data-manage >>> .ant-card-body > p {
   margin: 5px 10px;
 }
 
-.data-manage>>>.folder-link:hover {
+.data-manage >>> .folder-link:hover {
   text-decoration: underline;
 }
 </style>

@@ -60,7 +60,7 @@
         </el-form-item>
         <el-form-item label="数据集节点选择" prop="datasetNode">
           <el-select v-model="value" placeholder="请选择">
-            <el-option v-for="item in nodeOptions" :key="item.value" :label="item.label" :value="item.value">
+            <el-option v-for="item in nodeOptions" :key="item.value" :label="item.label" :value=s"item.value">
             </el-option>
           </el-select>
         </el-form-item>

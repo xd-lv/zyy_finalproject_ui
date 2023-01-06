@@ -31,13 +31,15 @@
                   icon="el-icon-search"
                   size="mini"
                   @click="handleQuery"
-                  >搜索</el-button
+                >搜索
+                </el-button
                 >
                 <el-button
                   icon="el-icon-refresh"
                   size="mini"
                   @click="resetQuery"
-                  >重置</el-button
+                >重置
+                </el-button
                 >
               </el-form-item>
               <el-form-item style="float: right">
@@ -48,7 +50,8 @@
                   size="mini"
                   @click="createEdge()"
                   v-hasPermi="['iot:edge:add']"
-                  >创建边缘集群</el-button
+                >创建边缘集群
+                </el-button
                 >
               </el-form-item>
             </el-form>
@@ -124,13 +127,15 @@
                     icon="el-icon-search"
                     size="mini"
                     @click="handleQuery"
-                    >搜索</el-button
+                  >搜索
+                  </el-button
                   >
                   <el-button
                     icon="el-icon-refresh"
                     size="mini"
                     @click="resetQuery"
-                    >重置</el-button
+                  >重置
+                  </el-button
                   >
                 </el-form-item>
                 <el-form-item style="float: right">
@@ -141,7 +146,8 @@
                     size="mini"
                     @click="createNode()"
                     v-hasPermi="['iot:node:add']"
-                    >新增节点</el-button
+                  >新增节点
+                  </el-button
                   >
                 </el-form-item>
               </el-form>
@@ -175,14 +181,15 @@
                             white-space: nowrap;
                           "
                         >
-                          <svg-icon icon-class="device" />
+                          <svg-icon icon-class="device"/>
                           {{ item.nodeName }}
                           <el-tag
                             type="info"
                             size="mini"
                             style="margin-left: 5px; font-weight: 200"
                             v-if="item.isSys == 1"
-                            >系统</el-tag
+                          >系统
+                          </el-tag
                           >
                         </el-link>
                       </el-col>
@@ -199,7 +206,8 @@
                             size="mini"
                             style="padding: 5px"
                             @click="changeDeviceStatus(item.deviceId, 1)"
-                            >已发布</el-button
+                          >已发布
+                          </el-button
                           >
                         </el-tooltip>
                         <el-tooltip
@@ -214,7 +222,8 @@
                             size="mini"
                             style="padding: 5px"
                             @click="changeDeviceStatus(item.deviceId, 2)"
-                            >未发布</el-button
+                          >未发布
+                          </el-button
                           >
                         </el-tooltip>
                       </el-col>
@@ -258,10 +267,12 @@
                               type="success"
                               size="mini"
                               v-if="item.isAuthorize == 1"
-                              >已启用</el-tag
+                            >已启用
+                            </el-tag
                             >
                             <el-tag type="info" size="mini" v-else
-                              >未启用</el-tag
+                            >未启用
+                            </el-tag
                             >
                           </el-descriptions-item>
                         </el-descriptions>
@@ -303,7 +314,8 @@
                         icon="el-icon-edit"
                         @click="handleEditDevice(item)"
                         v-hasPermi="['iot:device:edit']"
-                        >详情</el-button
+                      >详情
+                      </el-button
                       >
                       <el-button
                         size="mini"
@@ -312,7 +324,8 @@
                         @click="handleDelete(item)"
                         v-hasPermi="['iot:device:remove']"
                         v-if="item.status == 1"
-                        >删除</el-button
+                      >删除
+                      </el-button
                       >
                       <el-button
                         size="mini"
@@ -322,7 +335,8 @@
                         v-hasPermi="['iot:device:edit']"
                         v-if="item.status == 2"
                         :disabled="item.isAuthorize != 1"
-                        >设备授权</el-button
+                      >设备授权
+                      </el-button
                       >
                       <el-button
                         size="mini"
@@ -330,7 +344,8 @@
                         icon="el-icon-search"
                         @click="handleViewDevice(item.id)"
                         v-hasPermi="['iot:device:query']"
-                        >查看设备</el-button
+                      >查看设备
+                      </el-button
                       >
                     </el-button-group>
                   </el-card>
@@ -375,13 +390,15 @@
                     icon="el-icon-search"
                     size="mini"
                     @click="handleQuery"
-                    >搜索</el-button
+                  >搜索
+                  </el-button
                   >
                   <el-button
                     icon="el-icon-refresh"
                     size="mini"
                     @click="resetQuery"
-                    >重置</el-button
+                  >重置
+                  </el-button
                   >
                 </el-form-item>
                 <el-form-item style="float: right">
@@ -392,7 +409,8 @@
                     size="mini"
                     @click="createDevice()"
                     v-hasPermi="['iot:device:add']"
-                    >新增设备</el-button
+                  >新增设备
+                  </el-button
                   >
                 </el-form-item>
               </el-form>
@@ -426,14 +444,15 @@
                             white-space: nowrap;
                           "
                         >
-                          <svg-icon icon-class="device" />
+                          <svg-icon icon-class="device"/>
                           {{ item.deviceName }}
                           <el-tag
                             type="info"
                             size="mini"
                             style="margin-left: 5px; font-weight: 200"
                             v-if="item.isSys == 1"
-                            >系统</el-tag
+                          >系统
+                          </el-tag
                           >
                         </el-link>
                       </el-col>
@@ -450,7 +469,8 @@
                             size="mini"
                             style="padding: 5px"
                             @click="changeDeviceStatus(item.deviceId, 1)"
-                            >已发布</el-button
+                          >已发布
+                          </el-button
                           >
                         </el-tooltip>
                         <el-tooltip
@@ -465,7 +485,8 @@
                             size="mini"
                             style="padding: 5px"
                             @click="changeDeviceStatus(item.deviceId, 2)"
-                            >未发布</el-button
+                          >未发布
+                          </el-button
                           >
                         </el-tooltip>
                       </el-col>
@@ -488,17 +509,19 @@
                             </el-tag>
                           </el-descriptions-item>
                           <el-descriptions-item label="设备所属集群">
-                            <el-tag> {{ item.edgeName }} </el-tag>
+                            <el-tag> {{ item.edgeName }}</el-tag>
                           </el-descriptions-item>
                           <el-descriptions-item label="设备授权">
                             <el-tag
                               type="success"
                               size="mini"
                               v-if="item.isAuthorize == 1"
-                              >已启用</el-tag
+                            >已启用
+                            </el-tag
                             >
                             <el-tag type="info" size="mini" v-else
-                              >未启用</el-tag
+                            >未启用
+                            </el-tag
                             >
                           </el-descriptions-item>
                         </el-descriptions>
@@ -540,7 +563,8 @@
                         icon="el-icon-edit"
                         @click="handleEditDevice(item)"
                         v-hasPermi="['iot:device:edit']"
-                        >详情</el-button
+                      >详情
+                      </el-button
                       >
                       <el-button
                         size="mini"
@@ -549,7 +573,8 @@
                         @click="handleDelete(item)"
                         v-hasPermi="['iot:device:remove']"
                         v-if="item.status == 1"
-                        >删除</el-button
+                      >删除
+                      </el-button
                       >
                       <el-button
                         size="mini"
@@ -559,7 +584,8 @@
                         v-hasPermi="['iot:device:edit']"
                         v-if="item.status == 2"
                         :disabled="item.isAuthorize != 1"
-                        >设备授权</el-button
+                      >设备授权
+                      </el-button
                       >
                       <el-button
                         size="mini"
@@ -567,7 +593,8 @@
                         icon="el-icon-search"
                         @click="handleViewDevice(item.id)"
                         v-hasPermi="['iot:device:query']"
-                        >查看设备</el-button
+                      >查看设备
+                      </el-button
                       >
                     </el-button-group>
                   </el-card>
@@ -810,7 +837,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="createEdgeAction()"
-          >创建边缘集群</el-button
+        >创建边缘集群</el-button
         >
         <el-button type="type">取 消</el-button>
       </span>
@@ -819,41 +846,42 @@
 </template>
 
 <script>
-import axios from "axios";
-import { listProduct, listDevice } from "@/api/product";
-import { getClusterList } from "@/api/table";
-import { tsImportEqualsDeclaration } from "@babel/types";
+import axios from 'axios'
+import { listProduct, listDevice } from '@/api/product'
+import { getClusterList } from '@/api/table'
+import { tsImportEqualsDeclaration } from '@babel/types'
+
 export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: "success",
-        draft: "gray",
-        deleted: "danger",
-      };
-      return statusMap[status];
-    },
+        published: 'success',
+        draft: 'gray',
+        deleted: 'danger'
+      }
+      return statusMap[status]
+    }
   },
   data() {
     return {
-      deviceNetworkMethedList: ["","Wi-Fi", "蜂窝(2G/3G/4G/5G)", "以太网", "其他"],
-      nodeNetworkMethedList: ["","Wi-Fi", "蜂窝(2G/3G/4G/5G)", "以太网", "其他"],
-      deviceTypeList: ["直连设备", "网关子设备", "网关设备"],
-      activeName: "first",
+      deviceNetworkMethedList: ['', 'Wi-Fi', '蜂窝(2G/3G/4G/5G)', '以太网', '其他'],
+      nodeNetworkMethedList: ['', 'Wi-Fi', '蜂窝(2G/3G/4G/5G)', '以太网', '其他'],
+      deviceTypeList: ['直连设备', '网关子设备', '网关设备'],
+      activeName: 'first',
       dicts: [
-        "iot_yes_no",
-        "iot_device_status",
-        "iot_device_type",
-        "iot_network_method",
-        "iot_vertificate_method",
-        "iot_device_chip",
+        'iot_yes_no',
+        'iot_device_status',
+        'iot_device_type',
+        'iot_network_method',
+        'iot_vertificate_method',
+        'iot_device_chip'
       ],
       loading: false,
       total: 0,
       deviceList: [],
       nodeList: [],
       edgeList: [],
-      title: "",
+      title: '',
       open: false,
       edgeQueryParams: {
         pageNum: 1,
@@ -866,7 +894,7 @@ export default {
         isSys: null,
         status: null,
         nodeType: null,
-        networkMethod: null,
+        networkMethod: null
       },
       nodeQueryParams: {
         pageNum: 1,
@@ -879,7 +907,7 @@ export default {
         isSys: null,
         status: null,
         nodeType: null,
-        networkMethod: null,
+        networkMethod: null
       },
       deviceQueryParams: {
         pageNum: 1,
@@ -892,7 +920,7 @@ export default {
         isSys: null,
         status: null,
         deviceType: null,
-        networkMethod: null,
+        networkMethod: null
       },
       // 表单参数
       form: {},
@@ -902,124 +930,124 @@ export default {
       edgeCreate: false,
       list: null,
       edgeForm: {
-        edgeName: "",
-        edgeDesc: "",
+        edgeName: '',
+        edgeDesc: ''
       },
       DeviceTokenVisible: false,
       deviceForm: {
-        deviceName: "",
-        desc: "",
-        networkMethod: "",
-        edgeId:""
+        deviceName: '',
+        desc: '',
+        networkMethod: '',
+        edgeId: ''
       },
       NodeTokenVisible: false,
       nodeForm: {
-        nodeName: "",
-        desc: "",
-        mac:"",
-        networkMethod: "",
-        cpu:"",
-        gpu:"",
-        memory:"",
-        edgeId:""
+        nodeName: '',
+        desc: '',
+        mac: '',
+        networkMethod: '',
+        cpu: '',
+        gpu: '',
+        memory: '',
+        edgeId: ''
       },
       nodeOptions: [
         {
-          value: "0",
-          label: "云端安全权限",
-        },
+          value: '0',
+          label: '云端安全权限'
+        }
       ],
       networkMedthodOptions: [
         {
-          value: "1",
-          label: "Wi-Fi",
+          value: '1',
+          label: 'Wi-Fi'
         },
         {
-          value: "2",
-          label: "蜂窝(2G/3G/4G/5G)",
+          value: '2',
+          label: '蜂窝(2G/3G/4G/5G)'
         },
         {
-          value: "3",
-          label: "以太网",
+          value: '3',
+          label: '以太网'
         },
         {
-          value: "4",
-          label: "其他",
+          value: '4',
+          label: '其他'
         }
       ],
       deviceOptions: [],
       listLoading: false,
-      edgeListRefresh: true,
-    };
+      edgeListRefresh: true
+    }
   },
   created() {
-    this.fetchData();
-    this.getList();
+    this.fetchData()
+    this.getList()
   },
   methods: {
     handleClick(tab, event) {
-      console.log(tab, event);
+      console.log(tab, event)
     },
     /** 查询设备列表 */
     getList() {
-      this.loading = true;
-      axios.get("http://localhost:8100/cluster/listDevice").then((res) => {
-        this.deviceList = res.data.data;
-        this.loading = false;
-      });
-      axios.get("http://localhost:8100/cluster/listNode").then((res) => {
-        this.nodeList = res.data.data;
-        this.loading = false;
-      });
-      axios.get("http://localhost:8100/cluster/listEdge").then((res) => {
-        this.edgeList = res.data.data;
-        this.loading = false;
-        console.log(this.nodeOptions);
+      this.loading = true
+      axios.get('http://localhost:8100/cluster/listDevice').then((res) => {
+        this.deviceList = res.data.data
+        this.loading = false
+      })
+      axios.get('http://localhost:8100/cluster/listNode').then((res) => {
+        this.nodeList = res.data.data
+        this.loading = false
+      })
+      axios.get('http://localhost:8100/cluster/listEdge').then((res) => {
+        this.edgeList = res.data.data
+        this.loading = false
+        console.log(this.nodeOptions)
         for (let item of res.data.data) {
           this.nodeOptions.push({
             value: item.id,
-            label: item.name + "-" + item.desc,
-          });
+            label: item.name + '-' + item.desc
+          })
           this.deviceOptions.push({
             value: item.id,
-            label: item.name + "-" + item.desc,
-          });
+            label: item.name + '-' + item.desc
+          })
         }
-        console.log(this.nodeOptions);
-      });
+        console.log(this.nodeOptions)
+      })
     },
     createNode() {
-      this.nodeCreate = true;
-      console.log(this.nodeCreate);
+      this.nodeCreate = true
+      console.log(this.nodeCreate)
     },
     NodeTypeVisible(value) {
-      this.NodeTokenVisible = true;
+      this.NodeTokenVisible = true
     },
     createDevice() {
-      this.deviceCreate = true;
+      this.deviceCreate = true
     },
     DeviceTypeVisible(value) {
-      this.DeviceTokenVisible = true;
+      this.DeviceTokenVisible = true
     },
     createEdge() {
-      this.edgeCreate = true;
+      this.edgeCreate = true
     },
     fetchData() {
-      this.listLoading = true;
+      this.listLoading = true
       getClusterList().then((response) => {
-        this.list = response.data.items;
-        this.listLoading = false;
-      });
+        this.list = response.data.items
+        this.listLoading = false
+      })
     },
     clickAction() {
-      console.log("click");
+      console.log('click')
     },
     createEdgeAction() {
       console.log(this.edgeForm)
       var object = {
         name: this.edgeForm.edgeName,
         desc: this.edgeForm.edgeDesc
-      };
+      }
       this.edgeListRefresh = false
       axios
         .post('http://localhost:8100/cluster/createEdge', object)
@@ -1027,10 +1055,10 @@ export default {
           this.getList()
           this.edgeCreate = false
           this.edgeListRefresh = true
-        });
-    },
-  },
-};
+        })
+    }
+  }
+}
 </script>
 
 <style scoped>

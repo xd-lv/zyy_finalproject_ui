@@ -30,7 +30,8 @@
             :type="scope.type"
             @click="online(scope.row)"
             v-if="scope.row.state == 0"
-            >上线</el-button
+          >上线
+          </el-button
           >
           <el-button
             :size="scope.size"
@@ -45,7 +46,8 @@
             :type="scope.type"
             @click="offline(scope.row)"
             v-if="scope.row.state == 2"
-            >下线</el-button
+          >下线
+          </el-button
           >
         </template>
         <template slot="menuLeft" slot-scope="{ size }">
@@ -54,7 +56,7 @@
             type="primary"
             @click="createModelService()"
             icon="el-icon-plus"
-            >创建模型服务
+          >创建模型服务
           </el-button>
         </template>
       </avue-crud>
@@ -71,17 +73,17 @@
       <el-card class="box-card">
         <div style="font-size: 20px; padding: 15px 0">
           {{
-            "url: " +
+            'url: ' +
             modelServiceAPI.url +
-            "?modelServiceId=" +
+            '?modelServiceId=' +
             modelServiceAPI.modelServiceId
           }}
         </div>
         <div style="font-size: 20px; padding: 15px 0">
-          {{ "method: " + modelServiceAPI.method }}
+          {{ 'method: ' + modelServiceAPI.method }}
         </div>
         <div style="font-size: 20px; padding: 15px 0">
-          {{ 'multipart/form-data：{ "data": ' + modelServiceAPI.data + " }" }}
+          {{ 'multipart/form-data：{ "data": ' + modelServiceAPI.data + ' }' }}
         </div>
       </el-card>
     </el-dialog>
@@ -188,10 +190,10 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="saveModelService()"
-          >创建模型服务</el-button
+        >创建模型服务</el-button
         >
         <el-button type="type" @click="modelServiceCreate = !modelServiceCreate"
-          >取 消</el-button
+        >取 消</el-button
         >
       </span>
     </el-dialog>
@@ -209,110 +211,110 @@ import {
   offlineObj,
   getStatus,
   getModelList,
-  getAPI,
-} from "@/api/modelservice";
-import { tableOption, setModelList } from "@/const/crud/modelservice";
-import { mapGetters } from "vuex";
+  getAPI
+} from '@/api/modelservice'
+import { tableOption, setModelList } from '@/const/crud/modelservice'
+import { mapGetters } from 'vuex'
 import axios from 'axios'
 
 axios.defaults.withCredentials = false
 
 export default {
-  name: "modelservice",
+  name: 'modelservice',
   data() {
     return {
       modelList: [],
       modelServiceForm: {
-        modelServiceName: "",
-        modelServiceDesc: "",
-        modelServiceModel: "",
+        modelServiceName: '',
+        modelServiceDesc: '',
+        modelServiceModel: '',
         instanceNum: 1,
         runResourceCpu: 1,
         runResourceGpu: 0,
-        runResourceMem: 3,
+        runResourceMem: 3
       },
       modelServiceCreate: false,
       modelServiceAPIShow: false,
       modelServiceAPI: {
-        url: "",
-        method: "post",
-        modelServiceId: "",
-        data: "",
+        url: '',
+        method: 'post',
+        modelServiceId: '',
+        data: ''
       },
       searchForm: {},
       tableData: [],
       page: {
         total: 0, // 总页数
         currentPage: 1, // 当前页数
-        pageSize: 20, // 每页显示多少条
+        pageSize: 20 // 每页显示多少条
       },
       tableLoading: false,
       tableOption: tableOption,
       timer: null, // 轮询定时器
       timerNum: 10000, // 设置定时器时间ms
       marksCPU: {
-        0: "0.5",
-        1: "1",
-        2: "2",
-        3: "4",
-        4: "6",
-        5: "8",
-        6: "10",
-        7: "12",
-        8: "14",
-        9: "16",
+        0: '0.5',
+        1: '1',
+        2: '2',
+        3: '4',
+        4: '6',
+        5: '8',
+        6: '10',
+        7: '12',
+        8: '14',
+        9: '16'
       },
       marksGPU: {
-        0: "0",
-        1: "1",
-        2: "2",
-        3: "4",
+        0: '0',
+        1: '1',
+        2: '2',
+        3: '4'
       },
       marksMEM: {
-        0: "100Mi",
-        1: "200Mi",
-        2: "500Mi",
-        3: "1Gi",
-        4: "2Gi",
-        5: "4Gi",
-        6: "8Gi",
-        7: "16Gi",
-        8: "32Gi",
-      },
-    };
+        0: '100Mi',
+        1: '200Mi',
+        2: '500Mi',
+        3: '1Gi',
+        4: '2Gi',
+        5: '4Gi',
+        6: '8Gi',
+        7: '16Gi',
+        8: '32Gi'
+      }
+    }
   },
   created() {
-    this.getStatus();
+    this.getStatus()
   },
   computed: {
-    ...mapGetters(["permissions"]),
+    ...mapGetters(['permissions']),
     permissionList() {
       return {
         // addBtn: this.vaildData(this.permissions.aiPlatform_modelservice_add, false),
         // delBtn: this.vaildData(this.permissions.aiPlatform_modelservice_del, false),
         // editBtn: this.vaildData(this.permissions.aiPlatform_modelservice_edit, false)
-      };
-    },
+      }
+    }
   },
   methods: {
     createModelService() {
-      this.modelServiceCreate = true;
+      this.modelServiceCreate = true
       getModelList().then((data) => {
-        this.modelList = data.data.data;
-      });
+        this.modelList = data.data.data
+      })
     },
     getModelResource(modelId) {
-      this.axios.get("/aiplatform/models/" + modelId).then((res) => {
-        console.log(res.data.data.runResourceCpu);
-        console.log(res.data.data.runResourceGpu);
-        console.log(res.data.data.runResourceMem);
-        this.modelServiceForm.runResourceGpu = res.data.data.runResourceGpu;
-        this.modelServiceForm.runResourceMem = res.data.data.runResourceMen;
-        this.modelServiceForm.runResourceCpu = res.data.data.runResourceCpu;
-      });
+      this.axios.get('/aiplatform/models/' + modelId).then((res) => {
+        console.log(res.data.data.runResourceCpu)
+        console.log(res.data.data.runResourceGpu)
+        console.log(res.data.data.runResourceMem)
+        this.modelServiceForm.runResourceGpu = res.data.data.runResourceGpu
+        this.modelServiceForm.runResourceMem = res.data.data.runResourceMen
+        this.modelServiceForm.runResourceCpu = res.data.data.runResourceCpu
+      })
     },
     getList(page, params) {
-      this.tableLoading = true;
+      this.tableLoading = true
       // fetchList(
       //   Object.assign(
       //     {
@@ -339,151 +341,151 @@ export default {
         )
       })
         .then((response) => {
-          this.tableData = response.data.data.records;
-          this.page.total = response.data.data.total;
-          this.tableLoading = false;
+          this.tableData = response.data.data.records
+          this.page.total = response.data.data.total
+          this.tableLoading = false
         })
         .catch(() => {
-          this.tableLoading = false;
-        });
+          this.tableLoading = false
+        })
     },
-    rowDel: function (row, index) {
-      this.$confirm("是否确认删除ID为" + row.modelServiceId, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+    rowDel: function(row, index) {
+      this.$confirm('是否确认删除ID为' + row.modelServiceId, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
-        .then(function () {
-          return delObj(row.modelServiceId);
+        .then(function() {
+          return delObj(row.modelServiceId)
         })
         .then((data) => {
-          this.$message.success("删除成功");
-          this.getList(this.page);
-        });
+          this.$message.success('删除成功')
+          this.getList(this.page)
+        })
     },
-    handleUpdate: function (row, index, done, loading) {
+    handleUpdate: function(row, index, done, loading) {
       putObj(row)
         .then((data) => {
-          this.$message.success("修改成功");
-          done();
-          this.getList(this.page);
+          this.$message.success('修改成功')
+          done()
+          this.getList(this.page)
         })
         .catch(() => {
-          loading();
-        });
+          loading()
+        })
     },
     saveModelService() {
-      var cpulist = [0.5, 1, 2, 4, 6, 8, 10, 12, 14, 16];
-      var gpulist = [0, 1, 2, 4];
+      var cpulist = [0.5, 1, 2, 4, 6, 8, 10, 12, 14, 16]
+      var gpulist = [0, 1, 2, 4]
       var memlist = [
-        "100Mi",
-        "200Mi",
-        "500Mi",
-        "1Gi",
-        "2Gi",
-        "4Gi",
-        "8Gi",
-        "16Gi",
-        "32Gi",
-      ];
+        '100Mi',
+        '200Mi',
+        '500Mi',
+        '1Gi',
+        '2Gi',
+        '4Gi',
+        '8Gi',
+        '16Gi',
+        '32Gi'
+      ]
       var row = Object.assign({
         modelId: this.modelServiceForm.modelServiceModel,
         modelServiceDesc: this.modelServiceForm.modelServiceDesc,
-        modelServiceId: "",
+        modelServiceId: '',
         modelServiceName: this.modelServiceForm.modelServiceName,
         replicas: this.modelServiceForm.instanceNum,
         resourceCpu: cpulist[this.modelServiceForm.runResourceCpu],
         resourceGpu: gpulist[this.modelServiceForm.runResourceGpu],
         resourceMem: memlist[this.modelServiceForm.runResourceMem],
-        state: "",
-        updateTime: "",
-      });
-      console.log(row);
+        state: '',
+        updateTime: ''
+      })
+      console.log(row)
       addObj(row)
         .then((data) => {
-          this.$message.success("添加成功");
-          done();
-          this.getList(this.page);
+          this.$message.success('添加成功')
+          done()
+          this.getList(this.page)
         })
         .catch(() => {
-          loading();
-        });
-      this.modelServiceCreate = false;
+          loading()
+        })
+      this.modelServiceCreate = false
     },
-    handleSave: function (row, done, loading) {
-      console.log(row);
+    handleSave: function(row, done, loading) {
+      console.log(row)
       addObj(row)
         .then((data) => {
-          this.$message.success("添加成功");
-          done();
-          this.getList(this.page);
+          this.$message.success('添加成功')
+          done()
+          this.getList(this.page)
         })
         .catch(() => {
-          loading();
-        });
+          loading()
+        })
     },
     sizeChange(pageSize) {
-      this.page.pageSize = pageSize;
+      this.page.pageSize = pageSize
     },
     currentChange(current) {
-      this.page.currentPage = current;
+      this.page.currentPage = current
     },
     searchChange(form, done) {
-      this.searchForm = form;
-      this.page.currentPage = 1;
-      this.getList(this.page, form);
-      done();
+      this.searchForm = form
+      this.page.currentPage = 1
+      this.getList(this.page, form)
+      done()
     },
     refreshChange() {
-      this.getList(this.page);
+      this.getList(this.page)
     },
     online(row) {
-      console.log(row);
+      console.log(row)
       onlineObj(row)
         .then((data) => {
-          this.$message.success("模型服务上线中，请稍候");
-          this.getList(this.page);
+          this.$message.success('模型服务上线中，请稍候')
+          this.getList(this.page)
         })
         .catch(() => {
-          this.$message.error("模型服务上线失败");
-        });
+          this.$message.error('模型服务上线失败')
+        })
     },
     getPredictAPI(row) {
       getAPI(row)
         .then((data) => {
-          this.modelServiceAPI.url = data.data.data.url;
-          this.modelServiceAPI.method = data.data.data.method;
-          this.modelServiceAPI.modelServiceId = data.data.data.modelServiceId;
-          this.modelServiceAPI.data = data.data.data.data;
-          console.log(this.modelServiceAPI);
-          this.modelServiceAPIShow = true;
+          this.modelServiceAPI.url = data.data.data.url
+          this.modelServiceAPI.method = data.data.data.method
+          this.modelServiceAPI.modelServiceId = data.data.data.modelServiceId
+          this.modelServiceAPI.data = data.data.data.data
+          console.log(this.modelServiceAPI)
+          this.modelServiceAPIShow = true
         })
         .catch(() => {
-          this.$message.error("获取模型API失败");
-        });
+          this.$message.error('获取模型API失败')
+        })
     },
     offline(row) {
       offlineObj(row)
         .then((data) => {
-          this.$message.success("模型服务下线中");
-          this.getList(this.page);
+          this.$message.success('模型服务下线中')
+          this.getList(this.page)
         })
         .catch(() => {
-          this.$message.error("模型服务下线失败");
-        });
+          this.$message.error('模型服务下线失败')
+        })
     },
     beforeOpen(done, type) {
-      if (["add", "edit"].includes(type)) {
+      if (['add', 'edit'].includes(type)) {
         getModelList()
           .then((data) => {
-            setModelList(data.data.data);
-            done();
+            setModelList(data.data.data)
+            done()
           })
           .catch((e) => {
-            console.log(e.message, e.name, e.lineNumber);
-            this.$message.error("获取模型列表失败");
-            done();
-          });
+            console.log(e.message, e.name, e.lineNumber)
+            this.$message.error('获取模型列表失败')
+            done()
+          })
       }
     },
     getStatus() {
@@ -498,27 +500,27 @@ export default {
           }
         })
           .then((data) => {
-            var newStatus = data.data.data;
+            var newStatus = data.data.data
             this.tableData.forEach((value) => {
               if (newStatus[value.modelServiceId]) {
                 value.state =
-                  newStatus[value.modelServiceId].modelServiceStatus;
+                  newStatus[value.modelServiceId].modelServiceStatus
               }
-            });
+            })
           })
           .catch(() => {
-            this.$message.error("模型服务状态无法获取");
-            clearInterval(this.timer);
-            this.timer = null;
-          });
-      }, this.timerNum);
-    },
+            this.$message.error('模型服务状态无法获取')
+            clearInterval(this.timer)
+            this.timer = null
+          })
+      }, this.timerNum)
+    }
   },
   beforeDestroy() {
-    clearInterval(this.timer);
-    this.timer = null;
-  },
-};
+    clearInterval(this.timer)
+    this.timer = null
+  }
+}
 </script>
 <style>
 .uploader-style {

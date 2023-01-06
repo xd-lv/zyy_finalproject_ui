@@ -17,33 +17,35 @@
         @row-save="handleSave"
         @row-del="rowDel"
       >
-      <template slot="menuLeft" slot-scope="{ size }">
-        <el-button
-          :size="size"
-          type="primary"
-          icon="el-icon-plus"
-          @click="createModel()"
-        >创建模型
-        </el-button>
-      </template>
-      <template slot="state" slot-scope="scope">
-        <el-tag v-if="scope.row.state == 0" type="info">模型打包中</el-tag>
-        <el-tag v-if="scope.row.state == 1" type="success">模型打包完成</el-tag>
-        <el-tag v-if="scope.row.state == 2" type="warning">模型打包失败</el-tag>
-      </template>
-      <template slot="menu" slot-scope="{ type, size, row }">
-        <el-button
-          :size="size"
-          :type="type"
-          icon="el-icon-view"
-          @click="showRow(row)"
-        >显示</el-button>
-      </template>
-      <el-pagination
-  background
-  layout="prev, pager, next"
-  :total="1000">
-</el-pagination>
+        <template slot="menuLeft" slot-scope="{ size }">
+          <el-button
+            :size="size"
+            type="primary"
+            icon="el-icon-plus"
+            @click="createModel()"
+          >创建模型
+          </el-button>
+        </template>
+        <template slot="state" slot-scope="scope">
+          <el-tag v-if="scope.row.state == 0" type="info">模型打包中</el-tag>
+          <el-tag v-if="scope.row.state == 1" type="success">模型打包完成</el-tag>
+          <el-tag v-if="scope.row.state == 2" type="warning">模型打包失败</el-tag>
+        </template>
+        <template slot="menu" slot-scope="{ type, size, row }">
+          <el-button
+            :size="size"
+            :type="type"
+            icon="el-icon-view"
+            @click="showRow(row)"
+          >显示
+          </el-button>
+        </template>
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="1000"
+        >
+        </el-pagination>
       </avue-crud>
     </basic-container>
 
@@ -462,24 +464,24 @@ export default {
       handleroptions: [
         {
           value: 'image_classifier',
-          label: 'image_classifier',
+          label: 'image_classifier'
         },
         {
           value: 'object_detector',
-          label: 'object_detector',
+          label: 'object_detector'
         },
         {
           value: 'text_classifier',
-          label: 'text_classifier',
+          label: 'text_classifier'
         },
         {
           value: 'image_segmenter',
-          label: 'image_segmenter',
+          label: 'image_segmenter'
         },
         {
           value: 'user_defined',
-          label: '用户自定义Handler',
-        },
+          label: '用户自定义Handler'
+        }
       ],
       handlervalue: '',
       modelLink: '',
@@ -519,7 +521,7 @@ export default {
         // 路径树配置
         label: 'label',
         children: 'children',
-        isLeaf: function (data, node) {
+        isLeaf: function(data, node) {
           return data.isLeaf
         }
       }
@@ -574,13 +576,13 @@ export default {
       this.axios.get('/aiplatform/models/' + row.modelId).then((res) => {
         var obj = eval('(' + res.data.data.modelInferenceSetting + ')')
         document.getElementById('modelNameView').innerHTML =
-          res.data.data.modelName;
+          res.data.data.modelName
         document.getElementById('modelDescView').innerHTML =
-          res.data.data.modelDesc;
+          res.data.data.modelDesc
         document.getElementById('modelTimeView').innerHTML =
-          res.data.data.createTime;
+          res.data.data.createTime
         document.getElementById('modelTypeView').innerHTML =
-          res.data.data.modelInferenceType;
+          res.data.data.modelInferenceType
         document.getElementById('modelHandlerView').innerHTML = obj['handler']
         document.getElementById('modelFileView').innerHTML = obj['model-file']
         document.getElementById('modelExtraView').innerHTML =
@@ -589,7 +591,7 @@ export default {
           obj['serialized-file']
         document.getElementById('modelPythonView').innerHTML =
           obj['python-packages']
-      });
+      })
       this.modelPreview = true
     },
     getList(page, params) {
@@ -626,23 +628,23 @@ export default {
         })
         .catch(() => {
           this.tableLoading = false
-        });
+        })
     },
-    rowDel: function (row, index) {
+    rowDel: function(row, index) {
       this.$confirm('是否确认删除ID为' + row.modelId, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
-        .then(function () {
+        .then(function() {
           return delObj(row.modelId)
         })
         .then((data) => {
           this.$message.success('删除成功')
           this.getList(this.page)
-        });
+        })
     },
-    handleUpdate: function (row, index, done, loading) {
+    handleUpdate: function(row, index, done, loading) {
       putObj(row)
         .then((data) => {
           this.$message.success('修改成功')
@@ -759,7 +761,7 @@ export default {
           this.modelCreate = false
         })
     },
-    handleSave: function (row, done, loading) {
+    handleSave: function(row, done, loading) {
       console.log(row)
       console.log(row.modelId)
       console.log(row.userId)
@@ -782,14 +784,14 @@ export default {
         userId: row.userId,
         createTime: row.createTime,
         updateTime: row.updateTime
-      });
+      })
       console.log(temprow.modelInferenceSetting)
       addObj(temprow)
         .then((data) => {
           //console.log(done);
           //console.log(loading);
           this.$message.success('添加成功')
-          done();
+          done()
           this.getList(this.page)
         })
         .catch(() => {
@@ -926,9 +928,9 @@ export default {
             this.$message.error('模型服务状态无法获取')
             clearInterval(this.timer)
             this.timer = null
-          });
+          })
       }, this.timerNum)
-    },
+    }
   },
   beforeDestroy() {
     clearInterval(this.timer)
