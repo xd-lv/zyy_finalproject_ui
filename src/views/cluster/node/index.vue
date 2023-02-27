@@ -2,7 +2,7 @@
   <div class="app-container" style="background-color: #efefef; height: 100%">
     <el-row>
       <el-col span="3">
-        <h2>边云设备管理</h2>
+        <h2>集群节点管理</h2>
       </el-col>
     </el-row>
     <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -355,255 +355,255 @@
           </el-row>
         </el-row>
       </el-tab-pane>
-      <el-tab-pane label="设备管理" name="third">
-        <el-row>
-          <el-row>
-            <el-card style="margin-bottom: 5px">
-              <el-form
-                :model="deviceQueryParams"
-                ref="deviceQueryForm"
-                :inline="true"
-                label-width="68px"
-                style="margin-bottom: -20px"
-              >
-                <el-form-item label="设备名称" prop="deviceName">
-                  <el-input
-                    v-model="deviceQueryParams.deviceName"
-                    placeholder="请输入设备名称"
-                    clearable
-                    size="small"
-                    @keyup.enter.native="handleQuery"
-                  />
-                </el-form-item>
-                <el-form-item label="分类名称" prop="categoryName">
-                  <el-input
-                    v-model="deviceQueryParams.categoryName"
-                    placeholder="请输入设备分类名称"
-                    clearable
-                    size="small"
-                    @keyup.enter.native="handleQuery"
-                  />
-                </el-form-item>
-                <el-form-item>
-                  <el-button
-                    type="primary"
-                    icon="el-icon-search"
-                    size="mini"
-                    @click="handleQuery"
-                  >搜索
-                  </el-button
-                  >
-                  <el-button
-                    icon="el-icon-refresh"
-                    size="mini"
-                    @click="resetQuery"
-                  >重置
-                  </el-button
-                  >
-                </el-form-item>
-                <el-form-item style="float: right">
-                  <el-button
-                    type="primary"
-                    plain
-                    icon="el-icon-plus"
-                    size="mini"
-                    @click="createDevice()"
-                    v-hasPermi="['iot:device:add']"
-                  >新增设备
-                  </el-button
-                  >
-                </el-form-item>
-              </el-form>
-            </el-card>
-            <el-card style="padding-bottom: 100px">
-              <el-row :gutter="30" v-loading="loading">
-                <el-col
-                  v-for="item in deviceList"
-                  :xs="24"
-                  :sm="12"
-                  :md="12"
-                  :lg="8"
-                  :xl="6"
-                  style="margin-bottom: 30px; text-align: center"
-                >
-                  <el-card
-                    :body-style="{ padding: '20px' }"
-                    shadow="always"
-                    class="card-item"
-                  >
-                    <el-row type="flex" :gutter="10" justify="space-between">
-                      <el-col :span="20" style="text-align: left">
-                        <el-link
-                          type=""
-                          :underline="false"
-                          @click="handleEditDevice(item)"
-                          style="
-                            font-weight: bold;
-                            font-size: 16px;
-                            line-height: 32px;
-                            white-space: nowrap;
-                          "
-                        >
-                          <svg-icon icon-class="device"/>
-                          {{ item.deviceName }}
-                          <el-tag
-                            type="info"
-                            size="mini"
-                            style="margin-left: 5px; font-weight: 200"
-                            v-if="item.isSys == 1"
-                          >系统
-                          </el-tag
-                          >
-                        </el-link>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-tooltip
-                          class="item"
-                          effect="dark"
-                          content="取消发布"
-                          placement="top-start"
-                          v-if="item.status == 2"
-                        >
-                          <el-button
-                            type="success"
-                            size="mini"
-                            style="padding: 5px"
-                            @click="changeDeviceStatus(item.deviceId, 1)"
-                          >已发布
-                          </el-button
-                          >
-                        </el-tooltip>
-                        <el-tooltip
-                          class="item"
-                          effect="dark"
-                          content="现在发布"
-                          placement="top-start"
-                          v-if="item.status == 1"
-                        >
-                          <el-button
-                            type="info"
-                            size="mini"
-                            style="padding: 5px"
-                            @click="changeDeviceStatus(item.deviceId, 2)"
-                          >未发布
-                          </el-button
-                          >
-                        </el-tooltip>
-                      </el-col>
-                    </el-row>
-                    <el-row :gutter="10">
-                      <el-col :span="14">
-                        <el-descriptions
-                          :column="1"
-                          size="small"
-                          style="margin-top: 10px; white-space: nowrap"
-                        >
-                          <el-descriptions-item label="设备描述">
-                            <el-tag>
-                              {{ item.desc }}
-                            </el-tag>
-                          </el-descriptions-item>
-                          <el-descriptions-item label="联网方式">
-                            <el-tag>
-                              {{ deviceNetworkMethedList[item.networkMethod] }}
-                            </el-tag>
-                          </el-descriptions-item>
-                          <el-descriptions-item label="设备所属集群">
-                            <el-tag> {{ item.edgeName }}</el-tag>
-                          </el-descriptions-item>
-                          <el-descriptions-item label="设备授权">
-                            <el-tag
-                              type="success"
-                              size="mini"
-                              v-if="item.isAuthorize == 1"
-                            >已启用
-                            </el-tag
-                            >
-                            <el-tag type="info" size="mini" v-else
-                            >未启用
-                            </el-tag
-                            >
-                          </el-descriptions-item>
-                        </el-descriptions>
-                      </el-col>
-                      <el-col :span="10">
-                        <div style="margin-top: 10px">
-                          <el-image
-                            style="
-                              width: 100%;
-                              height: 100px;
-                              border-radius: 10px;
-                            "
-                            lazy
-                            :preview-src-list="[baseUrl + item.imgUrl]"
-                            :src="baseUrl + item.imgUrl"
-                            fit="cover"
-                            v-if="item.imgUrl != null && item.imgUrl != ''"
-                          ></el-image>
-                          <el-image
-                            style="
-                              width: 100%;
-                              height: 100px;
-                              border-radius: 10px;
-                            "
-                            :preview-src-list="[
-                              require('@/assets/images/product.jpg'),
-                            ]"
-                            :src="require('@/assets/images/product.jpg')"
-                            fit="cover"
-                            v-else
-                          ></el-image>
-                        </div>
-                      </el-col>
-                    </el-row>
-                    <el-button-group style="margin-top: 15px; height: 28px">
-                      <el-button
-                        size="mini"
-                        type="primary"
-                        icon="el-icon-edit"
-                        @click="handleEditDevice(item)"
-                        v-hasPermi="['iot:device:edit']"
-                      >详情
-                      </el-button
-                      >
-                      <el-button
-                        size="mini"
-                        type="danger"
-                        icon="el-icon-delete"
-                        @click="handleDelete(item)"
-                        v-hasPermi="['iot:device:remove']"
-                        v-if="item.status == 1"
-                      >删除
-                      </el-button
-                      >
-                      <el-button
-                        size="mini"
-                        type="success"
-                        icon="el-icon-s-check"
-                        @click="handleDeviceAuthorize(item)"
-                        v-hasPermi="['iot:device:edit']"
-                        v-if="item.status == 2"
-                        :disabled="item.isAuthorize != 1"
-                      >设备授权
-                      </el-button
-                      >
-                      <el-button
-                        size="mini"
-                        type="warning"
-                        icon="el-icon-search"
-                        @click="handleViewDevice(item.id)"
-                        v-hasPermi="['iot:device:query']"
-                      >查看设备
-                      </el-button
-                      >
-                    </el-button-group>
-                  </el-card>
-                </el-col>
-              </el-row>
-            </el-card>
-          </el-row>
-        </el-row>
-      </el-tab-pane>
+<!--      <el-tab-pane label="设备管理" name="third">-->
+<!--        <el-row>-->
+<!--          <el-row>-->
+<!--            <el-card style="margin-bottom: 5px">-->
+<!--              <el-form-->
+<!--                :model="deviceQueryParams"-->
+<!--                ref="deviceQueryForm"-->
+<!--                :inline="true"-->
+<!--                label-width="68px"-->
+<!--                style="margin-bottom: -20px"-->
+<!--              >-->
+<!--                <el-form-item label="设备名称" prop="deviceName">-->
+<!--                  <el-input-->
+<!--                    v-model="deviceQueryParams.deviceName"-->
+<!--                    placeholder="请输入设备名称"-->
+<!--                    clearable-->
+<!--                    size="small"-->
+<!--                    @keyup.enter.native="handleQuery"-->
+<!--                  />-->
+<!--                </el-form-item>-->
+<!--                <el-form-item label="分类名称" prop="categoryName">-->
+<!--                  <el-input-->
+<!--                    v-model="deviceQueryParams.categoryName"-->
+<!--                    placeholder="请输入设备分类名称"-->
+<!--                    clearable-->
+<!--                    size="small"-->
+<!--                    @keyup.enter.native="handleQuery"-->
+<!--                  />-->
+<!--                </el-form-item>-->
+<!--                <el-form-item>-->
+<!--                  <el-button-->
+<!--                    type="primary"-->
+<!--                    icon="el-icon-search"-->
+<!--                    size="mini"-->
+<!--                    @click="handleQuery"-->
+<!--                  >搜索-->
+<!--                  </el-button-->
+<!--                  >-->
+<!--                  <el-button-->
+<!--                    icon="el-icon-refresh"-->
+<!--                    size="mini"-->
+<!--                    @click="resetQuery"-->
+<!--                  >重置-->
+<!--                  </el-button-->
+<!--                  >-->
+<!--                </el-form-item>-->
+<!--                <el-form-item style="float: right">-->
+<!--                  <el-button-->
+<!--                    type="primary"-->
+<!--                    plain-->
+<!--                    icon="el-icon-plus"-->
+<!--                    size="mini"-->
+<!--                    @click="createDevice()"-->
+<!--                    v-hasPermi="['iot:device:add']"-->
+<!--                  >新增设备-->
+<!--                  </el-button-->
+<!--                  >-->
+<!--                </el-form-item>-->
+<!--              </el-form>-->
+<!--            </el-card>-->
+<!--            <el-card style="padding-bottom: 100px">-->
+<!--              <el-row :gutter="30" v-loading="loading">-->
+<!--                <el-col-->
+<!--                  v-for="item in deviceList"-->
+<!--                  :xs="24"-->
+<!--                  :sm="12"-->
+<!--                  :md="12"-->
+<!--                  :lg="8"-->
+<!--                  :xl="6"-->
+<!--                  style="margin-bottom: 30px; text-align: center"-->
+<!--                >-->
+<!--                  <el-card-->
+<!--                    :body-style="{ padding: '20px' }"-->
+<!--                    shadow="always"-->
+<!--                    class="card-item"-->
+<!--                  >-->
+<!--                    <el-row type="flex" :gutter="10" justify="space-between">-->
+<!--                      <el-col :span="20" style="text-align: left">-->
+<!--                        <el-link-->
+<!--                          type=""-->
+<!--                          :underline="false"-->
+<!--                          @click="handleEditDevice(item)"-->
+<!--                          style="-->
+<!--                            font-weight: bold;-->
+<!--                            font-size: 16px;-->
+<!--                            line-height: 32px;-->
+<!--                            white-space: nowrap;-->
+<!--                          "-->
+<!--                        >-->
+<!--                          <svg-icon icon-class="device"/>-->
+<!--                          {{ item.deviceName }}-->
+<!--                          <el-tag-->
+<!--                            type="info"-->
+<!--                            size="mini"-->
+<!--                            style="margin-left: 5px; font-weight: 200"-->
+<!--                            v-if="item.isSys == 1"-->
+<!--                          >系统-->
+<!--                          </el-tag-->
+<!--                          >-->
+<!--                        </el-link>-->
+<!--                      </el-col>-->
+<!--                      <el-col :span="4">-->
+<!--                        <el-tooltip-->
+<!--                          class="item"-->
+<!--                          effect="dark"-->
+<!--                          content="取消发布"-->
+<!--                          placement="top-start"-->
+<!--                          v-if="item.status == 2"-->
+<!--                        >-->
+<!--                          <el-button-->
+<!--                            type="success"-->
+<!--                            size="mini"-->
+<!--                            style="padding: 5px"-->
+<!--                            @click="changeDeviceStatus(item.deviceId, 1)"-->
+<!--                          >已发布-->
+<!--                          </el-button-->
+<!--                          >-->
+<!--                        </el-tooltip>-->
+<!--                        <el-tooltip-->
+<!--                          class="item"-->
+<!--                          effect="dark"-->
+<!--                          content="现在发布"-->
+<!--                          placement="top-start"-->
+<!--                          v-if="item.status == 1"-->
+<!--                        >-->
+<!--                          <el-button-->
+<!--                            type="info"-->
+<!--                            size="mini"-->
+<!--                            style="padding: 5px"-->
+<!--                            @click="changeDeviceStatus(item.deviceId, 2)"-->
+<!--                          >未发布-->
+<!--                          </el-button-->
+<!--                          >-->
+<!--                        </el-tooltip>-->
+<!--                      </el-col>-->
+<!--                    </el-row>-->
+<!--                    <el-row :gutter="10">-->
+<!--                      <el-col :span="14">-->
+<!--                        <el-descriptions-->
+<!--                          :column="1"-->
+<!--                          size="small"-->
+<!--                          style="margin-top: 10px; white-space: nowrap"-->
+<!--                        >-->
+<!--                          <el-descriptions-item label="设备描述">-->
+<!--                            <el-tag>-->
+<!--                              {{ item.desc }}-->
+<!--                            </el-tag>-->
+<!--                          </el-descriptions-item>-->
+<!--                          <el-descriptions-item label="联网方式">-->
+<!--                            <el-tag>-->
+<!--                              {{ deviceNetworkMethedList[item.networkMethod] }}-->
+<!--                            </el-tag>-->
+<!--                          </el-descriptions-item>-->
+<!--                          <el-descriptions-item label="设备所属集群">-->
+<!--                            <el-tag> {{ item.edgeName }}</el-tag>-->
+<!--                          </el-descriptions-item>-->
+<!--                          <el-descriptions-item label="设备授权">-->
+<!--                            <el-tag-->
+<!--                              type="success"-->
+<!--                              size="mini"-->
+<!--                              v-if="item.isAuthorize == 1"-->
+<!--                            >已启用-->
+<!--                            </el-tag-->
+<!--                            >-->
+<!--                            <el-tag type="info" size="mini" v-else-->
+<!--                            >未启用-->
+<!--                            </el-tag-->
+<!--                            >-->
+<!--                          </el-descriptions-item>-->
+<!--                        </el-descriptions>-->
+<!--                      </el-col>-->
+<!--                      <el-col :span="10">-->
+<!--                        <div style="margin-top: 10px">-->
+<!--                          <el-image-->
+<!--                            style="-->
+<!--                              width: 100%;-->
+<!--                              height: 100px;-->
+<!--                              border-radius: 10px;-->
+<!--                            "-->
+<!--                            lazy-->
+<!--                            :preview-src-list="[baseUrl + item.imgUrl]"-->
+<!--                            :src="baseUrl + item.imgUrl"-->
+<!--                            fit="cover"-->
+<!--                            v-if="item.imgUrl != null && item.imgUrl != ''"-->
+<!--                          ></el-image>-->
+<!--                          <el-image-->
+<!--                            style="-->
+<!--                              width: 100%;-->
+<!--                              height: 100px;-->
+<!--                              border-radius: 10px;-->
+<!--                            "-->
+<!--                            :preview-src-list="[-->
+<!--                              require('@/assets/images/product.jpg'),-->
+<!--                            ]"-->
+<!--                            :src="require('@/assets/images/product.jpg')"-->
+<!--                            fit="cover"-->
+<!--                            v-else-->
+<!--                          ></el-image>-->
+<!--                        </div>-->
+<!--                      </el-col>-->
+<!--                    </el-row>-->
+<!--                    <el-button-group style="margin-top: 15px; height: 28px">-->
+<!--                      <el-button-->
+<!--                        size="mini"-->
+<!--                        type="primary"-->
+<!--                        icon="el-icon-edit"-->
+<!--                        @click="handleEditDevice(item)"-->
+<!--                        v-hasPermi="['iot:device:edit']"-->
+<!--                      >详情-->
+<!--                      </el-button-->
+<!--                      >-->
+<!--                      <el-button-->
+<!--                        size="mini"-->
+<!--                        type="danger"-->
+<!--                        icon="el-icon-delete"-->
+<!--                        @click="handleDelete(item)"-->
+<!--                        v-hasPermi="['iot:device:remove']"-->
+<!--                        v-if="item.status == 1"-->
+<!--                      >删除-->
+<!--                      </el-button-->
+<!--                      >-->
+<!--                      <el-button-->
+<!--                        size="mini"-->
+<!--                        type="success"-->
+<!--                        icon="el-icon-s-check"-->
+<!--                        @click="handleDeviceAuthorize(item)"-->
+<!--                        v-hasPermi="['iot:device:edit']"-->
+<!--                        v-if="item.status == 2"-->
+<!--                        :disabled="item.isAuthorize != 1"-->
+<!--                      >设备授权-->
+<!--                      </el-button-->
+<!--                      >-->
+<!--                      <el-button-->
+<!--                        size="mini"-->
+<!--                        type="warning"-->
+<!--                        icon="el-icon-search"-->
+<!--                        @click="handleViewDevice(item.id)"-->
+<!--                        v-hasPermi="['iot:device:query']"-->
+<!--                      >查看设备-->
+<!--                      </el-button-->
+<!--                      >-->
+<!--                    </el-button-group>-->
+<!--                  </el-card>-->
+<!--                </el-col>-->
+<!--              </el-row>-->
+<!--            </el-card>-->
+<!--          </el-row>-->
+<!--        </el-row>-->
+<!--      </el-tab-pane>-->
     </el-tabs>
     <el-dialog
       v-dialogdrag
