@@ -22,7 +22,7 @@
                   placeholder="请输入边缘集群名称"
                   clearable
                   size="small"
-                  @keyup.enter.native="handleQuery"
+                  @keyup.enter.native="handleQueryEdge"
                 />
               </el-form-item>
               <el-form-item>
@@ -30,14 +30,14 @@
                   type="primary"
                   icon="el-icon-search"
                   size="mini"
-                  @click="handleQuery"
+                  @click="handleQueryEdge"
                 >搜索
                 </el-button
                 >
                 <el-button
                   icon="el-icon-refresh"
                   size="mini"
-                  @click="resetQuery"
+                  @click="resetQueryEdge"
                 >重置
                 </el-button
                 >
@@ -48,7 +48,7 @@
                   plain
                   icon="el-icon-plus"
                   size="mini"
-                  @click="createEdge()"
+                  @click="createEdge"
                   v-hasPermi="['iot:edge:add']"
                 >创建边缘集群
                 </el-button
@@ -61,7 +61,7 @@
               <el-table
                 v-loading="listLoading"
                 v-if="edgeListRefresh"
-                :data="edgeList"
+                :data="edgeFilterList"
                 element-loading-text="Loading"
                 border
                 fit
@@ -109,16 +109,7 @@
                     placeholder="请输入设备名称"
                     clearable
                     size="small"
-                    @keyup.enter.native="handleQuery"
-                  />
-                </el-form-item>
-                <el-form-item label="分类名称" prop="mac">
-                  <el-input
-                    v-model="nodeQueryParams.mac"
-                    placeholder="请输入设备分类名称"
-                    clearable
-                    size="small"
-                    @keyup.enter.native="handleQuery"
+                    @keyup.enter.native="handleQueryNode"
                   />
                 </el-form-item>
                 <el-form-item>
@@ -126,14 +117,14 @@
                     type="primary"
                     icon="el-icon-search"
                     size="mini"
-                    @click="handleQuery"
+                    @click="handleQueryNode"
                   >搜索
                   </el-button
                   >
                   <el-button
                     icon="el-icon-refresh"
                     size="mini"
-                    @click="resetQuery"
+                    @click="resetQueryNode"
                   >重置
                   </el-button
                   >
@@ -144,7 +135,7 @@
                     plain
                     icon="el-icon-plus"
                     size="mini"
-                    @click="createNode()"
+                    @click="createNode"
                     v-hasPermi="['iot:node:add']"
                   >新增节点
                   </el-button
@@ -155,13 +146,14 @@
             <el-card style="padding-bottom: 100px">
               <el-row :gutter="30" v-loading="loading">
                 <el-col
-                  v-for="item in nodeList"
+                  v-for=" item in nodeFilterList"
                   :xs="24"
                   :sm="12"
                   :md="12"
                   :lg="8"
                   :xl="6"
                   style="margin-bottom: 30px; text-align: center"
+                  :key="item.id"
                 >
                   <el-card
                     :body-style="{ padding: '20px' }"
@@ -175,11 +167,10 @@
                           :underline="false"
                           @click="handleEditDevice(item)"
                           style="
-                            font-weight: bold;
-                            font-size: 16px;
+                            font-weight: bold; 
+                            font-size: 16px; 
                             line-height: 32px;
-                            white-space: nowrap;
-                          "
+                            white-space: nowrap; "
                         >
                           <svg-icon icon-class="device"/>
                           {{ item.nodeName }}
@@ -205,7 +196,7 @@
                             type="success"
                             size="mini"
                             style="padding: 5px"
-                            @click="changeDeviceStatus(item.deviceId, 1)"
+                            @click="changeNodeStatus(item.id, 1)"
                           >已发布
                           </el-button
                           >
@@ -221,7 +212,7 @@
                             type="info"
                             size="mini"
                             style="padding: 5px"
-                            @click="changeDeviceStatus(item.deviceId, 2)"
+                            @click="changeNodeStatus(item.id, 2)"
                           >未发布
                           </el-button
                           >
@@ -355,7 +346,9 @@
           </el-row>
         </el-row>
       </el-tab-pane>
-      <el-tab-pane label="设备管理" name="third">
+
+      <!-- 设备管理 -->
+      <el-tab-pane label="设备管理" name="third">     
         <el-row>
           <el-row>
             <el-card style="margin-bottom: 5px">
@@ -418,13 +411,14 @@
             <el-card style="padding-bottom: 100px">
               <el-row :gutter="30" v-loading="loading">
                 <el-col
-                  v-for="item in deviceList"
+                  v-for="(item, index) in deviceList"
                   :xs="24"
                   :sm="12"
                   :md="12"
                   :lg="8"
                   :xl="6"
                   style="margin-bottom: 30px; text-align: center"
+                  :key="index"
                 >
                   <el-card
                     :body-style="{ padding: '20px' }"
@@ -438,10 +432,10 @@
                           :underline="false"
                           @click="handleEditDevice(item)"
                           style="
-                            font-weight: bold;
-                            font-size: 16px;
-                            line-height: 32px;
-                            white-space: nowrap;
+                            font-weight: bold
+                            font-size: 16px
+                            line-height: 32px
+                            white-space: nowrap
                           "
                         >
                           <svg-icon icon-class="device"/>
@@ -530,9 +524,9 @@
                         <div style="margin-top: 10px">
                           <el-image
                             style="
-                              width: 100%;
-                              height: 100px;
-                              border-radius: 10px;
+                              width: 100%
+                              height: 100px
+                              border-radius: 10px
                             "
                             lazy
                             :preview-src-list="[baseUrl + item.imgUrl]"
@@ -542,9 +536,9 @@
                           ></el-image>
                           <el-image
                             style="
-                              width: 100%;
-                              height: 100px;
-                              border-radius: 10px;
+                              width: 100%
+                              height: 100px
+                              border-radius: 10px
                             "
                             :preview-src-list="[
                               require('@/assets/images/product.jpg'),
@@ -605,6 +599,10 @@
         </el-row>
       </el-tab-pane>
     </el-tabs>
+
+
+
+
     <el-dialog
       v-dialogdrag
       title="新增节点"
@@ -716,8 +714,8 @@
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="clickAction()">新增节点</el-button>
-        <el-button type="type">取 消</el-button>
+        <el-button type="primary" @click="createNodeAction">新增节点</el-button>
+        <el-button type="type"  @click="closeNodeForm">取 消</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -797,7 +795,10 @@
         <el-button type="type">取 消</el-button>
       </span>
     </el-dialog>
-    <el-dialog
+
+    <!-- 创建边云集群 -->
+
+    <el-dialog          
       v-dialogdrag
       title="创建边缘集群"
       :visible.sync="edgeCreate"
@@ -836,10 +837,10 @@
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="createEdgeAction()"
+        <el-button type="primary" @click="createEdgeAction"
         >创建边缘集群</el-button
         >
-        <el-button type="type">取 消</el-button>
+        <el-button type="type" @click="closeEdgeForm">取 消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -880,7 +881,9 @@ export default {
       total: 0,
       deviceList: [],
       nodeList: [],
+      nodeFilterList:[],
       edgeList: [],
+      edgeFilterList: [],
       title: '',
       open: false,
       edgeQueryParams: {
@@ -980,7 +983,7 @@ export default {
       edgeListRefresh: true
     }
   },
-  created() {
+  mounted() {
     this.fetchData()
     this.getList()
   },
@@ -997,12 +1000,12 @@ export default {
       })
       axios.get('http://localhost:8100/cluster/listNode').then((res) => {
         this.nodeList = res.data.data
+        this.nodeFilterList = this.nodeList
         this.loading = false
       })
       axios.get('http://localhost:8100/cluster/listEdge').then((res) => {
-        this.edgeList = res.data.data
+        this.edgeList = this.edgeFilterList = res.data.data
         this.loading = false
-        console.log(this.nodeOptions)
         for (let item of res.data.data) {
           this.nodeOptions.push({
             value: item.id,
@@ -1013,12 +1016,10 @@ export default {
             label: item.name + '-' + item.desc
           })
         }
-        console.log(this.nodeOptions)
       })
     },
     createNode() {
       this.nodeCreate = true
-      console.log(this.nodeCreate)
     },
     NodeTypeVisible(value) {
       this.NodeTokenVisible = true
@@ -1042,6 +1043,48 @@ export default {
     clickAction() {
       console.log('click')
     },
+    createNodeAction() {
+      let object = {
+        ...this.nodeForm
+      }
+      axios
+        .post('http://localhost:8100/cluster/createNode', object)
+        .then((res) => {
+          this.closeNodeForm()
+          this.getList()
+        })
+        .catch(()=>{
+          this.closeNodeForm()
+        })
+    },
+    handleQueryNode(){
+      console.log(this.nodeQueryParams.nodeName)
+      this.nodeFilterList = this.nodeList.filter((item)=>{
+        return item.nodeName.indexOf(this.nodeQueryParams.nodeName) != -1
+      })
+    },
+    resetQueryNode(){
+      this.nodeFilterList = this.nodeList
+      this.nodeQueryParams.nodeName = ''
+    },
+    cleanNodeForm(){
+      this.nodeForm.nodeName = '',
+      this.nodeForm.desc = '',
+      this.nodeForm.mac = '',
+      this.nodeForm.networkMethod = '',
+      this.nodeForm.cpu = '',
+      this.nodeForm.gpu = '',
+      this.nodeForm.memory = '',
+      this.nodeForm.edgeId = ''
+    },
+    closeNodeForm(){
+      this.nodeCreate = false;
+      this.cleanNodeForm()
+    },
+    cleanEdgeForm(){
+      this.edgeForm.edgeName = ''
+      this.edgeForm.edgeDesc = ''
+    },
     createEdgeAction() {
       console.log(this.edgeForm)
       var object = {
@@ -1055,6 +1098,31 @@ export default {
           this.getList()
           this.edgeCreate = false
           this.edgeListRefresh = true
+        })
+      this.cleanEdgeForm()
+    },
+    closeEdgeForm(){
+      this.edgeCreate = false;
+      this.cleanEdgeForm()
+    },
+    handleQueryEdge(){ 
+      this.edgeFilterList =  this.edgeList.filter((edge)=>{
+        return edge.name.indexOf(this.edgeQueryParams.deviceName) != -1
+      })
+    },
+    resetQueryEdge(){
+      this.edgeQueryParams.deviceName = ''
+      this.edgeFilterList = this.edgeList
+    },
+    changeNodeStatus(id, status){
+      let object = {
+        id, status
+      }
+      console.log(object)
+      axios
+        .post('http://localhost:8100/cluster/updateNode', object)
+        .then((res) => {
+          this.getList()
         })
     }
   }
