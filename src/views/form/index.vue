@@ -7,7 +7,7 @@
       <el-row>
         <el-col :span=6>
           日志级别筛选：
-          <el-select v-model="level" placeholder="请选择" @change="levelFilter">
+          <el-select v-model="level" placeholder="请选择" @change="filter">
             <el-option
               v-for="item in levelOption"
               :key="item.value"
@@ -22,19 +22,21 @@
             v-model="date"
             type="date"
             placeholder="选择日期"
+            value-format="yyyy-MM-dd"
+            @change="filter"
           >
           </el-date-picker>
         </el-col>
 
         <el-col :span=12 style="text-align: right">
-          <el-button :span=3 type="primary">日志下载</el-button>
+          <el-button :span=3 type="primary" @click="getLog">日志下载</el-button>
         </el-col>
       </el-row>
       <el-row>
         <div
           style="height: 600px; margin-top: 20px; margin-right: 20px; margin-left: 20px; overflow-y: auto; position: absolute; width: 1480px; background-color: white; border-width: 2px; border-color: black"
         >
-          <div v-for="log in logItem" style="margin-left: 10px">
+          <div v-for="log in filteredItems" style="margin-left: 10px" :key="log.id">
             <div style="display: flex; text-align: left; height: 25px">
               <p>{{ log.date }}</p>
               <p v-show="log.level==='info'" style="color: green; margin-left: 10px">{{ log.level }}</p>
@@ -49,7 +51,7 @@
 </template>
 
 <script>
-import { axios } from 'axios'
+import axios  from 'axios'
 
 export default {
   data() {
@@ -66,14 +68,15 @@ export default {
       }],
       logText: '   7:7   warning  Require self-closing on Vue.js custom components (<el-input>)           vue/html-self-closing\n',
       level: '',
-      date: '',
-      logItem: []
+      date: null,
+      logItem: [],
+      filteredItems:[]
     }
   },
   mounted() {
-    setInterval(() => {
-      this.getLog()
-    }, 1000 * 5)
+    // setInterval(() => {
+    //   this.getLog()
+    // }, 1000 * 5)
   },
   methods: {
     onSubmit() {
@@ -86,42 +89,26 @@ export default {
       })
     },
     getLog() {
-      var result = axios.get('http://localhost:8100/log/getAllLog').then(res => {
-        console.log(res.data)
-        this.logItem = res.data.data
+      axios.get('http://localhost:8100/log/getAllLog').then(res => {
+        this.filteredItems =  this.logItem = res.data.data
+        this.filter()
       })
     },
-    levelFilter() {
-      console.log(this.level)
-      switch (this.level) {
-        case 'info':
-          this.logItem = new Array()
-          axios.get('http://localhost:8100/log/getAllLog').then(res => {
-            for (var i = 0; i < res.data.data.length; i++) {
-              if (res.data.data[i].level == 'info') {
-                this.logItem.push(res.data.data[i])
-              }
-            }
-          })
-          break
-        case 'warning':
-          this.logItem = new Array()
-          axios.get('http://localhost:8100/log/getAllLog').then(res => {
-            for (var i = 0; i < res.data.data.length; i++) {
-              if (res.data.data[i].level == 'warning') {
-                this.logItem.push(res.data.data[i])
-              }
-            }
-          })
-          break
-        case 'all':
-          this.logItem = new Array()
-          axios.get('http://localhost:8100/log/getAllLog').then(res => {
-            this.logItem = res.data.data
-          })
-          break
+    filter() {
+      if(this.level == 'all' || this.level == '') {
+        if(!this.date)
+          this.filteredItems = this.logItem
+        else
+          this.filteredItems = this.logItem.filter(item => item.date.substring(0, 10) == this.date)
       }
-    }
+      else{
+        if(!this.date)
+          this.filteredItems =  this.logItem.filter(item =>item.level == this.level)
+        else
+          this.filteredItems =  this.logItem.filter(item=>item.level == this.level)
+              .filter(item=>item.date.substring(0, 10) == this.date)
+      }
+    },
   }
 }
 </script>

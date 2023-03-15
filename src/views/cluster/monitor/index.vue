@@ -20,7 +20,7 @@
               </el-timeline>
             </el-card>
           </el-row>
-        </div>
+        </div> 
       </el-tab-pane>
       <el-tab-pane label="服务日志" name="third">
         <div class="execution">

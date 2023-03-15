@@ -9,13 +9,7 @@
         :table-loading="tableLoading"
         :option="tableOption"
         @on-load="getList"
-        @search-change="searchChange"
-        @refresh-change="refreshChange"
-        @size-change="sizeChange"
-        @current-change="currentChange"
-        @row-update="handleUpdate"
-        @row-save="handleSave"
-        @row-del="rowDel"
+        
       >
       <template slot="menuLeft" slot-scope="{ size }">
         <el-button
