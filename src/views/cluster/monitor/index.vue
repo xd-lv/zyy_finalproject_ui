@@ -25,11 +25,23 @@
       <el-tab-pane label="服务日志" name="third">
         <div class="execution">
           <basic-container>
-            <avue-crud ref="crud" :page.sync="page" :data="tableData" :permission="permissionList"
-                       :table-loading="tableLoading" :option="tableOption" :before-open="beforeOpen" @on-load="getList"
-                       @search-change="searchChange" @refresh-change="refreshChange" @size-change="sizeChange"
-                       @current-change="currentChange"
+            <avue-crud
+              ref="crud"
+              :page.sync="page"
+              :data="tableData"
+              :permission="permissionList"
+              :table-loading="tableLoading"
+              :option="tableOption"
+              :before-open="beforeOpen"
+              @on-load="getList"
+              @search-change="searchChange"
+              @refresh-change="refreshChange"
+              @size-change="sizeChange"
+              @current-change="currentChange"
             >
+              <template slot-scope="{type,size,row}" slot="menu">
+                <el-button icon="el-icon-view" :size="size" :type="type" @click="view(row)">详细</el-button>
+              </template>
               <template slot-scope="scope" slot="state">
                 <el-tag type="warning" v-if="scope.row.state == 0">未上线</el-tag>
                 <el-tag type="info" v-if="scope.row.state == 1">上线中</el-tag>
@@ -41,18 +53,46 @@
         </div>
       </el-tab-pane>
     </el-tabs>
+    <el-drawer
+      title="服务日志"
+      :visible.sync="drawer"
+      :with-header="false"
+      size="60%">
+      <el-row>
+        <h3>基本信息</h3>
+        <div>
+          {{ this.viewItem }}
+        </div>
+      </el-row>
+      <el-row>
+        <h3>日志信息</h3>
+        <div
+          style="height: 600px; margin-top: 20px; margin-right: 20px; margin-left: 20px; overflow-y: auto; position: absolute; width: 1480px; background-color: white; border-width: 2px; border-color: black"
+        >
+          <div v-for="log in logItem" style="margin-left: 10px">
+            <div style="display: flex; text-align: left; height: 25px">
+              <p>{{ log.date }}</p>
+              <p v-show="log.level==='info'" style="color: green; margin-left: 10px">{{ log.level }}</p>
+              <p v-show="log.level==='warning'" style="color: red; margin-left: 10px">{{ log.level }}</p>
+              <p style="margin-left: 10px">{{ log.content }}</p>
+            </div>
+          </div>
+        </div>
+      </el-row>
+    </el-drawer>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import { tableOption, setModelList } from '@/const/crud/modelservice'
+import { tableOption, setModelList } from '@/const/crud/logmodelservice'
 
 axios.defaults.withCredentials = false
 
 export default {
   data() {
     return {
+      drawer: false,
       activeName: 'second',
       // card高度自适应
       conheight: {
@@ -92,7 +132,22 @@ export default {
           name: '活动按期开始',
           timestamp: '2018-04-15'
         }
-      ]
+      ],
+      levelOption: [{
+        value: 'all',
+        label: '全部'
+      }, {
+        value: 'info',
+        label: '一般日志'
+      }, {
+        value: 'warning',
+        label: '警告日志'
+      }],
+      logText: '   7:7   warning  Require self-closing on Vue.js custom components (<el-input>)           vue/html-self-closing\n',
+      level: '',
+      date: '',
+      logItem: [],
+      viewItem: []
     }
   },
   created() {
@@ -100,7 +155,17 @@ export default {
     window.addEventListener('resize', this.getHeight) // card高度自适应
     this.getHeight() // card高度自适应
   },
+  mounted() {
+    setInterval(() => {
+      this.getLog()
+    }, 1000 * 5)
+  },
   methods: {
+    view(row) {
+      // this.$message.success('自定义按钮'+ JSON.stringify(row));
+      this.viewItem = row
+      this.drawer = true
+    },
     handleClick(tab, event) {
       console.log(tab, event)
     },
@@ -184,6 +249,52 @@ export default {
             this.timer = null
           })
       }, this.timerNum)
+    },
+    onSubmit() {
+      this.$message('submit!')
+    },
+    onCancel() {
+      this.$message({
+        message: 'cancel!',
+        type: 'warning'
+      })
+    },
+    getLog() {
+      var result = axios.get('http://localhost:8100/log/getAllLog').then(res => {
+        console.log(res.data)
+        this.logItem = res.data.data
+      })
+    },
+    levelFilter() {
+      console.log(this.level)
+      switch (this.level) {
+        case 'info':
+          this.logItem = new Array()
+          axios.get('http://localhost:8100/log/getAllLog').then(res => {
+            for (var i = 0; i < res.data.data.length; i++) {
+              if (res.data.data[i].level == 'info') {
+                this.logItem.push(res.data.data[i])
+              }
+            }
+          })
+          break
+        case 'warning':
+          this.logItem = new Array()
+          axios.get('http://localhost:8100/log/getAllLog').then(res => {
+            for (var i = 0; i < res.data.data.length; i++) {
+              if (res.data.data[i].level == 'warning') {
+                this.logItem.push(res.data.data[i])
+              }
+            }
+          })
+          break
+        case 'all':
+          this.logItem = new Array()
+          axios.get('http://localhost:8100/log/getAllLog').then(res => {
+            this.logItem = res.data.data
+          })
+          break
+      }
     }
   }
 }

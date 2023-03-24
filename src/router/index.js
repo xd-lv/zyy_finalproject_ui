@@ -107,7 +107,7 @@ export const constantRoutes = [
         path: 'update',
         name: 'Update',
         component: () => import('@/views/service/update/index'),
-        meta: { title: '服务更新', icon: 'update' }
+        meta: { title: '任务更新', icon: 'update' }
       }
     ]
   },
@@ -131,30 +131,30 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/auth',
-    component: Layout,
-    children: [
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '零信任认证管理', icon: 'tree' }
-      }
-    ]
-  },
-  {
-    path: '/log',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: '日志监控',
-        component: () => import('@/views/form/index'),
-        meta: { title: '日志监控', icon: 'form' }
-      }
-    ]
-  },
+  // {
+  //   path: '/auth',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'tree',
+  //       name: 'Tree',
+  //       component: () => import('@/views/tree/index'),
+  //       meta: { title: '零信任认证管理', icon: 'tree' }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/log',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: '日志监控',
+  //       component: () => import('@/views/form/index'),
+  //       meta: { title: '日志监控', icon: 'form' }
+  //     }
+  //   ]
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

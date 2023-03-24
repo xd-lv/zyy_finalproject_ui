@@ -1,17 +1,43 @@
 <template>
   <div class="execution">
     <!-- <basic-container> -->
-      <el-row>
-      <el-col span="6">
-        <h1>服务版本管理</h1>
-      </el-col>
-    </el-row>
+    <template>
+      <el-tabs :tab-position=tabPosition style="height: 100%;">
+        <el-tab-pane label="通用模型服务">
+          <el-card class="box-card" shadow="always" :body-style="{ padding: '20px' }">
+            <el-steps :active="active" finish-status="success">
+              <el-step title="选择服务"></el-step>
+              <el-step title="版本查看"></el-step>
+              <el-step title="新版本构建"></el-step>
+              <el-step title="版本构建完成"></el-step>
+            </el-steps>
+
+            <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
+          </el-card>
+        </el-tab-pane>
+        <el-tab-pane label="联合推理服务">联合推理服务</el-tab-pane>
+        <el-tab-pane label="增量学习服务">增量学习服务</el-tab-pane>
+        <el-tab-pane label="版本删除">版本删除</el-tab-pane>
+      </el-tabs>
+    </template>
     <!-- </basic-container> -->
   </div>
 </template>
 
 <script>
-
+export default {
+  data() {
+    return {
+      tabPosition: 'left',
+      active: 0
+    }
+  },
+  methods: {
+    next() {
+      if (this.active++ > 2) this.active = 0
+    }
+  }
+}
 </script>
 <style>
 .uploader-style {

@@ -3,7 +3,7 @@
     <!-- <basic-container> -->
       <el-row>
       <el-col span="6">
-        <h1>服务更新</h1>
+        <h1>任务更新</h1>
       </el-col>
     </el-row>
     <!-- </basic-container> -->
