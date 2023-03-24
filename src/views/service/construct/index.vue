@@ -87,7 +87,7 @@
         </div>
       </el-card>
     </el-dialog>
-
+<!-- 创建模型服务 -->
     <el-dialog
       title="创建模型服务"
       :visible.sync="modelServiceCreate"
@@ -341,8 +341,8 @@ export default {
         )
       })
         .then((response) => {
-          this.tableData = response.data.data.records
-          this.page.total = response.data.data.total
+          this.tableData = response.data.data
+          this.page.total = this.tableData.length/this.page.pageSize + (this.tableData.length%this.page.pageSize==0)?0:1;
           this.tableLoading = false
         })
         .catch(() => {

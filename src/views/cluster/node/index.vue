@@ -92,6 +92,7 @@
           </el-row>
         </el-row>
       </el-tab-pane>
+      <!-- 节点管理 -->
       <el-tab-pane label="节点管理" name="second">
         <el-row>
           <el-row>
@@ -303,7 +304,7 @@
                         size="mini"
                         type="primary"
                         icon="el-icon-edit"
-                        @click="handleEditDevice(item)"
+                        @click="handleEditNode(item)"
                         v-hasPermi="['iot:device:edit']"
                       >详情
                       </el-button
@@ -843,6 +844,34 @@
         <el-button type="type" @click="closeEdgeForm">取 消</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog
+      title="详情"
+      :visible.sync="nodeMessageShow"
+      width="30%"
+      :before-close="handleClose">
+
+      <el-descriptions title="" direction="horizontal" :column="1" border>
+        <el-descriptions-item label="ID">{{ nodeMessage.id }}</el-descriptions-item>
+        <el-descriptions-item label="节点所在集群">{{ nodeMessage.edgeName }}</el-descriptions-item>
+        <el-descriptions-item label="节点名称" :span="2">{{ nodeMessage.nodeName }}</el-descriptions-item>
+        <el-descriptions-item label="描述">{{ nodeMessage.desc }}</el-descriptions-item>
+        <el-descriptions-item label="mac地址">{{ nodeMessage.mac }}</el-descriptions-item>
+        <el-descriptions-item label="用户联网方式">
+            {{ nodeNetworkMethedList[nodeMessage.networkMethod] }}
+        </el-descriptions-item>
+        <el-descriptions-item label="cpu数量">{{ nodeMessage.cpu }}</el-descriptions-item>
+        <el-descriptions-item label="gpu数量">{{ nodeMessage.gpu }}</el-descriptions-item>
+        <el-descriptions-item label="内存大小">{{ nodeMessage.memory }}Gi</el-descriptions-item>
+        <el-descriptions-item label="是否发布">
+          <span v-if="nodeMessage.status==1"> 未发布 </span>
+          <span v-if="nodeMessage.status==2"> 已发布 </span>
+        </el-descriptions-item>
+        <el-descriptions-item label="创建时间">{{ nodeMessage.createTime }}</el-descriptions-item>
+        <el-descriptions-item label="更新时间">{{ nodeMessage.updateTime }}</el-descriptions-item>
+      </el-descriptions>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -980,7 +1009,9 @@ export default {
       ],
       deviceOptions: [],
       listLoading: false,
-      edgeListRefresh: true
+      edgeListRefresh: true,
+      nodeMessageShow:false,
+      nodeMessage:{}
     }
   },
   mounted() {
@@ -988,6 +1019,13 @@ export default {
     this.getList()
   },
   methods: {
+    handleClose(done) {
+      done()
+    },
+    handleEditNode(item){
+      this.nodeMessage = item
+      this.nodeMessageShow = true;
+    },
     handleClick(tab, event) {
       console.log(tab, event)
     },
@@ -999,6 +1037,7 @@ export default {
         this.loading = false
       })
       axios.get('http://localhost:8100/cluster/listNode').then((res) => {
+        console.log(res)
         this.nodeList = res.data.data
         this.nodeFilterList = this.nodeList
         this.loading = false
